@@ -1,4 +1,4 @@
-    Język: JAVA
+    Język: JAVA 17
 
     Github: https://github.com/Wadowski-Mateusz/TO_project
 
