@@ -1,6 +1,9 @@
 *.drawio
-REAMDE.md
+README.md
 samplefile.md
 uczestnicy.txt
 .vscode/
 .idea/
+pom.xml
+shop.iml
+./target/
