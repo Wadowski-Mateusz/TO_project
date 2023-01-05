@@ -1,4 +1,5 @@
-czy id jako string czy int?
-numer telfonu jako string czy int?
-koszyk w user jako ID jego w bazie, czy po prostu jako koszyk?
+Możemy założyć że każdy użytkownik będzie miał jeden rekord z ustawieniami i jeden z koszykiem.
+
+W takim razie id użytkownika == id settings == id cart.
+
 Jak zrobić historie zamówień użytkownika?
