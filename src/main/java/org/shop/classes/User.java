@@ -13,7 +13,7 @@ public class User {
     private Address address;
     private Cart cart;
     private UserSettings settings;
-    private String role;
+    private String role; // "standard" "admin"
     private ArrayList<Order> orderHistory;
 
     public int getId() {
