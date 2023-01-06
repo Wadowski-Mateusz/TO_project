@@ -1,0 +1,8 @@
+*.drawio
+samplefile.md
+uczestnicy.txt
+.vscode/
+.idea/
+*.iml
+target/
+out/
