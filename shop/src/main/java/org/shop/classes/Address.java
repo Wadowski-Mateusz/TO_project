@@ -3,8 +3,8 @@ package org.shop.classes;
 public class Address {
 
     private int id;
-    private String Street;
-    private String houseNumber;
+    private String street;
+    private String house;
     private String zip;
     private String city;
     private String voivodeships;
@@ -13,13 +13,13 @@ public class Address {
 
     public void setId(int id) {this.id = id;}
 
-    public String getStreet() {return Street;}
+    public String getStreet() {return street;}
 
-    public void setStreet(String street) {Street = street;}
+    public void setStreet(String street) {this.street = street;}
 
-    public String getHouseNumber() {return houseNumber;}
+    public String getHouse() {return house;}
 
-    public void setHouseNumber(String houseNumber) {this.houseNumber = houseNumber;}
+    public void setHouse(String house) {this.house = house;}
 
     public String getZip() {return zip;}
 

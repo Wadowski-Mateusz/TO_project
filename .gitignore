@@ -5,4 +5,4 @@ uczestnicy.txt
 .idea/
 pom.xml
 shop.iml
-./target/
+target/
