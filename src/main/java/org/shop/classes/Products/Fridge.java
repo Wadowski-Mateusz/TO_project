@@ -19,4 +19,8 @@ public class Fridge extends Product {
     static Convertible convertFromRecord(int id) {
         throw new UnsupportedOperationException();
     }
+    @Override
+    public String convertToRecord() {
+        throw new UnsupportedOperationException();
+    }
 }

@@ -4,7 +4,7 @@ import org.shop.classes.Product;
 import org.shop.interfaces.Convertible;
 
 public class CPU extends Product {
-    public String category = "computer/coputer_parts/cpu";
+    public final String category = "computer/coputer_parts/cpu"; //path in database!
 
     public int cores;
     public int threads;
@@ -16,6 +16,10 @@ public class CPU extends Product {
     }
     // TODO
     static Convertible convertFromRecord(int id) {
+        throw new UnsupportedOperationException();
+    }
+    @Override
+    public String convertToRecord() {
         throw new UnsupportedOperationException();
     }
 }
