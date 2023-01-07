@@ -1,25 +1,27 @@
 package org.shop.classes;
 
+import org.shop.interfaces.Convertible;
+
 import java.util.ArrayList;
 
-public class Product {
+import static java.lang.Float.NaN;
 
+public abstract class Product implements Convertible {
+
+    volatile static private int freeId = -1;
     private int id;
+    private String name;
+    private String producent;
+    private String category;
     private float basePrice;
     private float discountPrice;
-    private float LowestPriceMonth;
     private ArrayList<Tag> tags;
     private ArrayList<Product> suggested;
     private int howManyStock;
     private Boolean visibility;
 
-
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public float getBasePrice() {
@@ -36,14 +38,6 @@ public class Product {
 
     public void setDiscountPrice(float discountPrice) {
         this.discountPrice = discountPrice;
-    }
-
-    public float getLowestPriceMonth() {
-        return LowestPriceMonth;
-    }
-
-    public void setLowestPriceMonth(float lowestPriceMonth) {
-        LowestPriceMonth = lowestPriceMonth;
     }
 
     public ArrayList<Tag> getTags() {
@@ -76,6 +70,11 @@ public class Product {
 
     public void setVisibility(Boolean visibility) {
         this.visibility = visibility;
+    }
+
+    @Override
+    public final String convertToRecord() {
+        throw new UnsupportedOperationException("Cannot save product to base. It should be added manually.");
     }
 
 }

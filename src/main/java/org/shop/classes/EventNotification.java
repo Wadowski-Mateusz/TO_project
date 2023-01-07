@@ -1,5 +1,6 @@
 package org.shop.classes;
 
+// TODO make it convertible
 public class EventNotification {
 
     private int id;

@@ -1,9 +1,14 @@
 package org.shop.classes;
 
+import org.shop.interfaces.Convertible;
+
 import java.util.ArrayList;
 
-public class User {
+public class User implements Convertible {
+    public static final String STANDARD = "standard";
+    public static final String ADMIN = "admin";
 
+    volatile static private int freeId = -1;
     private int id;
     private String name;
     private String surname;
@@ -13,15 +18,47 @@ public class User {
     private Address address;
     private Cart cart;
     private UserSettings settings;
-    private String role; // "standard" "admin"
+    private String role;
     private ArrayList<Order> orderHistory;
+
+    public User(){
+        throw new UnsupportedOperationException("Missing default constructior for User");
+    }
+    public User(String password, String email){
+        // TODO id
+        this.id = -1;
+        this.name = "";
+        this.surname = "";
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = "";
+        this.address = null;
+        this.cart = new Cart(this.id);
+        this.settings = new UserSettings(this.id);
+        this.role = User.STANDARD;
+        this.orderHistory = new ArrayList<>();
+    }
+
+    public User(String[] data){
+        // TODO find address, cart and settings in base
+        this.id = Integer.parseInt(data[0]);
+        this.name = data[1];
+        this.surname = data[2];
+        this.email = data[3];
+        this.password = data[4];
+        this.phoneNumber = data[5];
+//        this.address = data[6];
+//        this.cart = data[7];
+//        this.settings = data[8];
+        this.role = data[9];
+        this.orderHistory = new ArrayList<>();
+//        for(int i = 10; i < data.length; i++)
+//            orderHistory.add(data[i]);
+    }
+
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -103,5 +140,29 @@ public class User {
     public void setOrderHistory(ArrayList<Order> orderHistory) {
         this.orderHistory = orderHistory;
     }
+
+    @Override
+    public String convertToRecord() {
+        String result = "";
+        result = this.id + ","
+                + this.name + "," + this.surname + ","
+                + this.email + "," + this.password + ","
+                + this.phoneNumber + "," + this.address.getId() + ","
+                + this.cart.getId() + "," + this.settings.getId() + ","
+                + this.role;
+        if (this.orderHistory.size() > 0) {
+            result += "," + orderHistory.toString();
+            result = result.replace(" ", "");
+            result = result.replace("[", "");
+            result = result.replace("]", "");
+        }
+        return result;
+    }
+
+    static public Convertible convertFromRecord(String record) {
+        String[] data = record.split(",");
+        return new User(data);
+    }
+
 
 }

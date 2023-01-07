@@ -8,10 +8,8 @@ package org.shop.classes;
 public final class DatabaseConnector {
 
     private static volatile DatabaseConnector instance;
-    private volatile Converter converter;
 
     private DatabaseConnector() {
-        converter = new Converter();
     }
 
     public static DatabaseConnector getInstance() {

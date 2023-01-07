@@ -1,7 +1,12 @@
 package org.shop.classes;
 
-public class Address {
+import org.shop.interfaces.Convertible;
 
+import java.util.Objects;
+
+public class Address implements Convertible {
+
+    volatile static private int freeId = -1;   //jeśli == -1, klasa sprawdzi w pliku pierwsze wolne id; jeśli >=0, to uzyje tego id i zikremenruje
     private int id;
     private String street;
     private String house;
@@ -9,9 +14,28 @@ public class Address {
     private String city;
     private String voivodeships;
 
-    public int getId() {return id;}
 
-    public void setId(int id) {this.id = id;}
+    public Address(int id, String street, String house, String zip, String city, String voivodeships) {
+        this.id = id;
+        this.street = street;
+        this.house = house;
+        this.zip = zip;
+        this.city = city;
+        this.voivodeships = voivodeships;
+    }
+
+    private Address(String[] data){
+        if(data.length != 6)
+            throw new IllegalArgumentException("Bad number of parameters\n");
+        this.id = Integer.parseInt(data[0]);
+        this.street = data[1];
+        this.house = data[2];
+        this.zip = data[3];
+        this.city = data[4];
+        this.voivodeships = data[5];
+    }
+
+    public int getId() {return id;}
 
     public String getStreet() {return street;}
 
@@ -33,4 +57,26 @@ public class Address {
 
     public void setVoivodeships(String voivodeships) {this.voivodeships = voivodeships;}
 
+    @Override
+    public String convertToRecord() {
+        return id + "," + street + "," + house + "," + zip + "," + city + "," + voivodeships;
+    }
+
+    static public Convertible convertFromRecord(String record) {
+        String[] data = record.split(",");
+        return new Address(data);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return id == address.id && street.equals(address.street) && house.equals(address.house) && zip.equals(address.zip) && city.equals(address.city) && voivodeships.equals(address.voivodeships);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, street, house, zip, city, voivodeships);
+    }
 }
