@@ -5,7 +5,7 @@ import org.shop.interfaces.Convertible;
 
 public class Microwave extends Product {
 
-    public String category = "agd/kitchen/microwave";
+    public static final String CATEGORY = "agd/kitchen/microwave";
     public float volume;
     public int power;
 

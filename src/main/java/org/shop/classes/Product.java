@@ -8,11 +8,12 @@ import static java.lang.Float.NaN;
 
 public abstract class Product implements Convertible {
 
+    public static final String CATEGORY = "";
+
     volatile static private int freeId = -1;
     private int id;
     private String name;
     private String mark;
-    private String category;
     private float basePrice;
     private float discountPrice;
     private ArrayList<Tag> tags;
@@ -93,10 +94,6 @@ public abstract class Product implements Convertible {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getCategory() {
-        return category;
     }
 
 }

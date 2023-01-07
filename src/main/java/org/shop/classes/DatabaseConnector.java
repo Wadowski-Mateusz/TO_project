@@ -54,9 +54,9 @@ public final class DatabaseConnector {
         }
     }
 
-
+    // TODO look in every file
     public int findFreeId(Product product){
-        File file = new File(DIR + product.getCategory() + ".csv");
+//        File file = new File(DIR_PRODUCTS);
         throw new UnsupportedOperationException();
     }
 

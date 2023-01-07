@@ -5,7 +5,7 @@ import org.shop.interfaces.Convertible;
 
 public class Fridge extends Product {
 
-    public String category = "agd/kitchen/fridge";
+    public static final String CATEGORY = "agd/kitchen/fridge";
     public float volume;
     public int power;
     public String energyEfficiencyClass;

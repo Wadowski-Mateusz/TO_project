@@ -4,7 +4,7 @@ import org.shop.classes.Product;
 import org.shop.interfaces.Convertible;
 
 public class CPU extends Product {
-    public final String category = "computer/coputer_parts/cpu"; //path in database!
+    public static final String CATEGORY = "computer/coputer_parts/cpu"; //path in database!
 
     public int cores;
     public int threads;
