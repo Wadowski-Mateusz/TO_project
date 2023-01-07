@@ -7,6 +7,7 @@ Konwertowanie eventNotification na jsona (i vice versa).
         "id" : id,
         "message" : "message"
     }
+Czy jednak csv? Wiadomosc moze zawierać przecinki
 ??
 
 Tam gdzie jest freeId należy w konstruktorze:
@@ -18,7 +19,7 @@ Tam gdzie jest freeId należy w konstruktorze:
     
 Tam gdzie w klasach jest id innych klas można przerobić na ich obieky i w odpowiednich miejscach używać getId().
     
-DataConnector
+DatabaseConnector
     
 Jak zapisac produkt do pliku, jezeli ma 2 kontenery?
 
