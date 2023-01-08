@@ -6,7 +6,11 @@ import java.util.Objects;
 
 public class Address implements Convertible {
 
-    volatile private int freeId = -1;   //jeśli == -1, klasa sprawdzi w pliku pierwsze wolne id; jeśli >=0, to uzyje tego id i zikrementuje
+    public static void main(String[] args){
+        Convertible address = convertFromRecord(7);
+        System.out.println(address.convertToRecord());
+    }
+
     private int id;
     private String street;
     private String house;
@@ -14,8 +18,25 @@ public class Address implements Convertible {
     private String city;
     private String voivodeships;
 
-    public Address(String street, String house, String zip, String city, String voivodeships) {
+    public Address(){
+    }
 
+    public Address(int id) {
+        this.id = id;
+        this.street = "";
+        this.house = "";
+        this.zip = "";
+        this.city = "";
+        this.voivodeships = "";
+
+        DatabaseConnector dbc = DatabaseConnector.getInstance();
+        if(!dbc.saveToFile(this)){
+            System.out.println("Saving to file failed");
+        }
+    }
+
+    public Address(int id, String street, String house, String zip, String city, String voivodeships) {
+        this.id = id;
         this.street = street;
         this.house = house;
         this.zip = zip;
@@ -23,17 +44,9 @@ public class Address implements Convertible {
         this.voivodeships = voivodeships;
 
         DatabaseConnector dbc = DatabaseConnector.getInstance();
-        if(this.freeId < 0)
-            this.freeId = dbc.findFreeId(Address.class);
-
-        this.id = freeId++;
-
-       if(!dbc.saveToFile(this)){
-           System.out.println("Failed save to file");
-           this.id = -1;
-           this.freeId -= 1;
-       }
-
+        if(!dbc.saveToFile(this)){
+            System.out.println("Saving to file failed");
+        }
     }
 
     private Address(String[] data){
@@ -74,21 +87,12 @@ public class Address implements Convertible {
         return id + "," + street + "," + house + "," + zip + "," + city + "," + voivodeships;
     }
 
-    static public Convertible convertFromRecord(String record) {
-        String[] data = record.split(",");
+    static public Convertible convertFromRecord(int id) {
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        String[] data = db.recordFromFile(id, Address.class).split(",");
+        if(data.equals(null))
+            return null;
         return new Address(data);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Address address = (Address) o;
-        return id == address.id && street.equals(address.street) && house.equals(address.house) && zip.equals(address.zip) && city.equals(address.city) && voivodeships.equals(address.voivodeships);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, street, house, zip, city, voivodeships);
-    }
 }

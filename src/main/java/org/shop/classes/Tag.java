@@ -4,12 +4,23 @@ import org.shop.interfaces.Convertible;
 
 public class Tag implements Convertible {
 
+    private static int freeId = -1;
     private int id;
     private String name;
 
-    public Tag(){
-        // todo
-        throw new UnsupportedOperationException();
+    public Tag(String name){
+        this.name = name;
+
+        DatabaseConnector dbc = DatabaseConnector.getInstance();
+        if(this.freeId < 0)
+            this.freeId = dbc.findFreeId(Tag.class);
+        this.id = freeId++;
+
+        if(!dbc.saveToFile(this)){
+            System.out.println("Failed save to file");
+            this.id = -1;
+            this.freeId -= 1;
+        }
     }
 
     private Tag(String[] data){
@@ -33,8 +44,11 @@ public class Tag implements Convertible {
         return this.id + "," + this.name;
     }
 
-    static Convertible convertFromRecord(String record) {
-        String[] data = record.split(",");
+    static Convertible convertFromRecord(int id) {
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        String[] data = db.recordFromFile(id, Tag.class).split(",");
+        if(data.equals(null))
+            return null;
         return new Tag(data);
     }
 }

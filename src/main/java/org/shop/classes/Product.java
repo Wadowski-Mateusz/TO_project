@@ -6,10 +6,11 @@ import java.util.ArrayList;
 
 import static java.lang.Float.NaN;
 
+// TODO convertible methods
+
 public abstract class Product implements Convertible {
 
     public static final String CATEGORY = "";
-
     static private int freeId = -1;
     private int id;
     private String name;
@@ -30,6 +31,18 @@ public abstract class Product implements Convertible {
         this.suggested = suggested;
         this.howManyStock = howManyStock;
         this.visibility = visibility;
+
+        DatabaseConnector dbc = DatabaseConnector.getInstance();
+        if(this.freeId < 0)
+            this.freeId = dbc.findFreeId(Product.class);
+
+        this.id = freeId++;
+
+        if(!dbc.saveToFile(this)){
+            System.out.println("Failed save to file");
+            this.id = -1;
+            this.freeId -= 1;
+        }
     }
 
 
@@ -90,7 +103,15 @@ public abstract class Product implements Convertible {
      * For adding items to database. Only for admin. */
     @Override
     public String convertToRecord() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("product.convertToRecord unsupported");
+    }
+
+    public Convertible convertFromRecord(int id){
+        throw new UnsupportedOperationException("product.convertFromRecord unsupported");
+//        DatabaseConnector db = DatabaseConnector.getInstance();
+//        String[] data = db.recordFromFile(id, .class).split(",");
+//        if(data.equals(null))
+//            return null;
     }
 
     public String getMark() {

@@ -21,22 +21,30 @@ public class User implements Convertible {
     private String role;
     private ArrayList<Order> orderHistory;
 
-    public User(){
-        throw new UnsupportedOperationException("Missing default constructior for User");
-    }
     public User(String password, String email){
-        // TODO id
-        this.id = -1;
         this.name = "";
         this.surname = "";
         this.email = email;
         this.password = password;
         this.phoneNumber = "";
-        this.address = null;
-        this.cart = new Cart(this.id);
-        this.settings = new UserSettings(this.id);
+        this.address = new Address(this.id); // TODO look in files
+        this.cart = new Cart(this.id); // TODO look in files
+        this.settings = new UserSettings(this.id); // TODO look in files
         this.role = User.STANDARD;
         this.orderHistory = new ArrayList<>();
+
+        DatabaseConnector dbc = DatabaseConnector.getInstance();
+        if(this.freeId < 0)
+            this.freeId = dbc.findFreeId(User.class);
+
+        this.id = freeId++;
+
+        if(!dbc.saveToFile(this)){
+            System.out.println("Saving to file failed");
+            this.id = -1;
+            this.freeId -= 1;
+        }
+
     }
 
     public User(String[] data){
@@ -159,10 +167,12 @@ public class User implements Convertible {
         return result;
     }
 
-    static public Convertible convertFromRecord(String record) {
-        String[] data = record.split(",");
+    static public Convertible convertFromRecord(int id) {
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        String[] data = db.recordFromFile(id, User.class).split(",");
+        if(data.equals(null))
+            return null;
         return new User(data);
     }
-
 
 }

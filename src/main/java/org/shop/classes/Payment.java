@@ -15,10 +15,18 @@ public class Payment implements Convertible {
     private float value;
     private String status;
 
+    /**
+     * @param id same as order id
+     * @param value same as order value
+     */
     public Payment(int id, float value){
         this.id = id;
         this.value = value;
         this.status = status_payment_false;
+        DatabaseConnector dbc = DatabaseConnector.getInstance();
+        if(!dbc.saveToFile(this)){
+            System.out.println("Failed save to file");
+        }
     }
 
     private Payment(String[] data){
@@ -43,10 +51,6 @@ public class Payment implements Convertible {
         return value;
     }
 
-    public void setValue(float value) {
-        this.value = value;
-    }
-
     @Override
     public String convertToRecord() {
         String result = this.id + ","
@@ -55,8 +59,11 @@ public class Payment implements Convertible {
         return result;
     }
 
-    static Convertible convertFromRecord(String record) {
-        String[] data = record.split(",");
+    static Convertible convertFromRecord(int id) {
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        String[] data = db.recordFromFile(id, Payment.class).split(",");
+        if(data.equals(null))
+            return null;
         return new Payment(data);
     }
 

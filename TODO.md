@@ -1,37 +1,36 @@
-Przerobić Order/Cart na budowniczego
-  
-??  
-Konwertowanie eventNotification na jsona (i vice versa).
+Cart:
     
-    {
-        "id" : id,
-        "message" : "message"
-    }
-Czy jednak csv? Wiadomosc moze zawierać przecinki
+    change constructor for builder
 
-??
 
-Tam gdzie jest freeId należy w konstruktorze:
+ Product:
 
-        - sprawdzić czy freeId > -1
-        - jesli tak to przypisac je do obiekty i zikrementowac
-        - jesli nie to odczytac je z pliku, przypisać do atrybutu i zrobić jak wyżej
+    convertToRecord() - How to convert, if product is using 2 containers
 
+
+EventNoticication:
+
+    Conversion to and from string
+
+
+DatabaseConnector:
+
+    Updace record
+    Load given record
+    Load all items from given category
+
+
+User:
+    
+    Change constructor default and User(String[])
+    Login()
+    Register()
     
 Tam gdzie w klasach jest id innych klas można przerobić na ich obieky i w odpowiednich miejscach używać getId().
-    
-DatabaseConnector
 
-Przetestować DatabaseConnector.saveToFile()
-    
-Jak zapisac produkt do pliku, jezeli ma 2 kontenery?
-
-Produkt powinien być dodawany do bazy.
-Jeśli jest potrzebny, powinien być z niej wczytywany.
 
 Wzorce.
 
 "volatile" a "synchronization"
 
 
-Na pewno coś o czym zapomniałem

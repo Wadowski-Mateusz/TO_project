@@ -3,7 +3,8 @@ package org.shop.classes;
 import org.shop.interfaces.Convertible;
 
 /**
- * id same as order
+ * @id same as order
+ * @address same as user address
  * */
 
 public class Shipping implements Convertible {
@@ -13,13 +14,16 @@ public class Shipping implements Convertible {
     public static final String STATUS_PREPARATION = "w przygotowaniu";
     private int id;
     private Address address;
-
     private String status;
 
     public Shipping(int id, Address address){
         this.id = id;
-        this.status = Shipping.STATUS_PREPARATION;
         this.address = address;
+        this.status = Shipping.STATUS_PREPARATION;
+        DatabaseConnector dbc = DatabaseConnector.getInstance();
+        if(!dbc.saveToFile(this)){
+            System.out.println("Failed save to file");
+        }
     }
 
     private Shipping(String[] data){
@@ -57,8 +61,11 @@ public class Shipping implements Convertible {
         return this.id + "," + this.address.getId() + "," + this.status;
     }
 
-    static Convertible convertFromRecord(String record) {
-        String[] data = record.split(",");
+    static Convertible convertFromRecord(int id) {
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        String[] data = db.recordFromFile(id, Shipping.class).split(",");
+        if(data.equals(null))
+            return null;
         return new Shipping(data);
     }
 

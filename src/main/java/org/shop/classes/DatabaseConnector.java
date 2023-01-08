@@ -1,11 +1,8 @@
 package org.shop.classes;
 
-
-import org.shop.classes.Products.Microwave;
 import org.shop.interfaces.Convertible;
 
 import java.io.*;
-import java.nio.file.DirectoryStream;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -128,6 +125,11 @@ public final class DatabaseConnector {
         return maxIdFile(path) + 1;
     }
 
+    /**
+     * @param lookFor look for file, example "user.csv"
+     * @param lookIn look in this directory and subdirectories
+     * @return on success, path to file; on failure empty string
+     */
     private String findFileRecursive(String lookFor, String lookIn){
 
         String foundPath = "";
@@ -152,6 +154,10 @@ public final class DatabaseConnector {
 
     }
 
+    /**
+     * @param convertible object convertible to csv with file in date/
+     * @return path to file for argument
+     */
     private String findFile(Convertible convertible){
         String[] classData = convertible.getClass().getName().split("\\.");
         String fileName = classData[classData.length-1].toLowerCase() + ".csv";
@@ -163,10 +169,13 @@ public final class DatabaseConnector {
         return path;
     }
 
+    /**
+     * @param convertible object to save to database
+     * @return on success returns true; on failure returns false
+     */
     public boolean saveToFile(Convertible convertible){
-
         String path = findFile(convertible);
-//        System.out.println("Path: " + path);
+        System.out.println("Path:" + path + "\tData: " + convertible.convertToRecord());
         try {
             Writer output = new BufferedWriter(new FileWriter(path, true));
             output.append(System.lineSeparator() + convertible.convertToRecord());
@@ -174,13 +183,42 @@ public final class DatabaseConnector {
         } catch (IOException e){
             return false;
         }
-
         return true;
     }
 
 
-    public Convertible readFromFile(int id, String fileName){
-        throw new UnsupportedOperationException();
+    /**
+     * @param id if of object method has to find
+     * @param convertible istance of item we are looking for
+     * @return
+     */
+    public String recordFromFile(int id, Class convertible)  {
+        try {
+            Object ob = convertible.newInstance();
+            String path = findFile((Convertible) ob);
+            File file = new File(path);
+            Scanner scanner = new Scanner(file);
+            scanner.nextLine(); //header
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                int foundId = Integer.parseInt(line.split(",")[0]);
+                if(foundId == id) {
+                    scanner.close();
+                    return line;
+                }
+            }
+            scanner.close();
+            return null;
+        } catch (FileNotFoundException e) {
+            System.out.println("No such a file");
+            return null;
+        } catch (InstantiationException e) {
+            System.out.println("Error");
+            return null;
+        } catch (IllegalAccessException e){
+            System.out.println("Error");
+            return null;
+        }
     }
 
 }

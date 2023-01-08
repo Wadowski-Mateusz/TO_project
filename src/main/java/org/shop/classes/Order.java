@@ -11,10 +11,10 @@ import java.util.ArrayList;
  * */
 public class Order implements Convertible {
 
-    public static final String status_finalized = "Zrealizowano";
-    public static final String status_payment_false = "Nieoplacone";
-    public static final String status_payment_true = "Oplacone";
-    public static final String status_shipped = "Wyslane";
+    public static final String STATUS_FINALIZED = "Zrealizowano";
+    public static final String STATUS_PAYMENT_FALSE = "Nieoplacone";
+    public static final String STATUS_PAYMENT_TURE = "Oplacone";
+    public static final String STATUS_SHIPPED = "Wyslane";
 
     volatile static private int freeId = -1;
     private int id;
@@ -23,10 +23,10 @@ public class Order implements Convertible {
     private ArrayList<Integer> productsId;
 
     public Order(int value, ArrayList<Integer> productsId){
-        //TODO id from database
+        // TODO id from database
         this.value = value;
         this.productsId = productsId;
-        this.status = status_payment_false;
+        this.status = STATUS_PAYMENT_FALSE;
     }
 
     private Order(String[] data){
@@ -82,8 +82,11 @@ public class Order implements Convertible {
         str = str.replace("]", "");
         return str;
     }
-    static Convertible convertFromRecord(String record) {
-        String[] data = record.split(",");
+    static Convertible convertFromRecord(int id) {
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        String[] data = db.recordFromFile(id, Order.class).split(",");
+        if(data.equals(null))
+            return null;
         return new Order(data);
     }
 }

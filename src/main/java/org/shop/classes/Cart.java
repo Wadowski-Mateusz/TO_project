@@ -7,19 +7,22 @@ import java.util.Objects;
 
 /**
  * Maybe change productsId to ArrayList<Protuct> and use ID only for save and init
+ * @id same as user id
  * */
 public class Cart implements Convertible {
     private int id;
     private float value;
-    private ArrayList<Integer> productsId;
+    private ArrayList<Integer> productsId; // TODO change to <Product>
 
-    /** TODO change to builder (or maybe order should be made by builder?)
-     * @param id same as User id
-     * */
+    // TODO change to builder (or maybe order should be construct by builder?)
     public Cart(int id){
        this.id = id;
        this.value = 0.0F;
        this.productsId = new ArrayList<>();
+        DatabaseConnector dbc = DatabaseConnector.getInstance();
+        if(!dbc.saveToFile(this)){
+            System.out.println("Failed save to file");
+        }
     }
 
     private Cart(String[] data){
@@ -28,7 +31,6 @@ public class Cart implements Convertible {
         this.productsId = new ArrayList<>();
         for(int i = 2; i < data.length; i++)
             productsId.add(Integer.parseInt(data[i]));
-
     }
 
     public int getId() {
@@ -41,8 +43,13 @@ public class Cart implements Convertible {
         return this.value;
     }
 
-    public boolean addProduct(){
-        throw new UnsupportedOperationException();
+    // TODO
+    public boolean addProduct(Product product){
+        throw new UnsupportedOperationException("addProduct() not implemented");
+    }
+    // TODO
+    public boolean removeProduct(int productId){
+        throw new UnsupportedOperationException("removeProduct() not implemented");
     }
 
     public ArrayList<Integer> getProductsId() {
@@ -67,28 +74,18 @@ public class Cart implements Convertible {
         return str;
     }
 
-    static public Convertible convertFromRecord(String record) {
-        String[] data = record.split(",");
+    static public Convertible convertFromRecord(int id) {
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        String[] data = db.recordFromFile(id, Cart.class).split(",");
+        if(data.equals(null))
+            return null;
         if(data.length == 2)
             return new Cart(Integer.parseInt(data[0]));
         return new Cart(data);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Cart cart = (Cart) o;
-        return id == cart.id && Float.compare(cart.value, value) == 0 && Objects.equals(productsId, cart.productsId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, value, productsId);
-    }
-
     public int createOrder(){
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("createOrder not implemented");
         // TODO
         // should return order ID
     }

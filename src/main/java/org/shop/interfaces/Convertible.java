@@ -8,14 +8,9 @@ public interface Convertible {
     String convertToRecord();
 
     // Convert string (record from database) into object
-    static Convertible convertFromRecord(String record) {
-        throw new UnsupportedOperationException();
-    }
-
-    // TODO
-    // Convert record from database into object
     static Convertible convertFromRecord(int id) {
         throw new UnsupportedOperationException();
     }
+
 }
 
