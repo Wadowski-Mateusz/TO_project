@@ -217,4 +217,39 @@ public final class DatabaseConnector {
         }
     }
 
+
+    /** Updates record in database.
+     * @param convertible object to update
+     * @return on success returns true; on failure returns false
+     */
+    public boolean updateRecord(Convertible convertible){
+        try {
+            String path = findFile(convertible);
+            BufferedReader file = new BufferedReader(new FileReader(path));
+            StringBuffer inputBuffer = new StringBuffer();
+            String line;
+            int id = Integer.parseInt(convertible.convertToRecord().split(",")[0]);
+            while ((line = file.readLine()) != null) {
+                System.out.println(line);
+                if(Integer.parseInt(line.split(",")[0]) == id) {
+                    line = convertible.convertToRecord();
+                    inputBuffer.append(line).append('\n');
+                    break;
+                }
+                inputBuffer.append(line).append('\n');
+            }
+
+            file.close();
+
+            // write the new string with the replaced line OVER the same file
+            FileOutputStream fileOut = new FileOutputStream(path);
+            fileOut.write(inputBuffer.toString().getBytes());
+            fileOut.close();
+            return true;
+        } catch (IOException e) {
+            System.out.println("updateRecord() error");
+            return false;
+        }
+    }
+
 }
