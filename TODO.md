@@ -1,6 +1,6 @@
 Cart:
-    
-    change constructor for builder
+
+    int createOrder();
 
 
  Product:
@@ -16,7 +16,6 @@ EventNoticication:
 DatabaseConnector:
 
     Updace record
-    Load given record
     Load all items from given category
 
 
