@@ -1,7 +1,6 @@
 package org.shop.app;
 
 import java.io.*;
-import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -29,10 +28,7 @@ public class ClientApp {
             // Closing the connection
             socket.close();
 
-        }catch(ConnectException e){
-            System.out.println("Server is unavailable.");
-            System.exit(1);
-        } catch(SocketException e){
+        }catch(SocketException e) {
             System.out.println("Server is unavailable.");
             System.exit(1);
         }
