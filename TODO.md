@@ -1,6 +1,7 @@
-Cart:
+Order:
+    
+    save to file when user confirm order (with shipping and payment)
 
-    int createOrder();
 
  Product:
 

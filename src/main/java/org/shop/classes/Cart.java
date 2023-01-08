@@ -34,16 +34,6 @@ public class Cart implements Convertible {
             System.out.println("Failed save to file");
     }
 
-//    private Cart(String[] data){
-//        this.id = Integer.parseInt(data[0]);
-//        this.value = Float.parseFloat(data[1]);
-//        ArrayList<Integer> productsId = new ArrayList<>();
-//
-//        DatabaseConnector db = DatabaseConnector.getInstance();
-//        for(int i = 2; i < data.length; i++)
-//            products.add(Integer.parseInt(data[i]));
-//    }
-
     public int getId() {
         return id;
     }
@@ -92,9 +82,9 @@ public class Cart implements Convertible {
         return builder.build();
     }
 
-    public int createOrder(){
-        throw new UnsupportedOperationException("createOrder not implemented");
-        // TODO
-        // should return order ID
+    public Order createOrder(){
+        Order order = new Order(this.value, this.products);
+        order.setShipping(new Shipping(order.getId(), (Address) Address.convertFromRecord(this.id)));
+        return order;
     }
 }

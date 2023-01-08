@@ -18,10 +18,10 @@ public class Payment implements Convertible {
         this.id = id;
         this.value = value;
         this.status = status_payment_false;
-        DatabaseConnector dbc = DatabaseConnector.getInstance();
-        if(!dbc.saveToFile(this)){
-            System.out.println("Failed save to file");
-        }
+//        DatabaseConnector dbc = DatabaseConnector.getInstance();
+//        if(!dbc.saveToFile(this)){
+//            System.out.println("Failed save to file");
+//        }
     }
 
     private Payment(String[] data){

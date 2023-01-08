@@ -20,10 +20,10 @@ public class Shipping implements Convertible {
         this.id = id;
         this.address = address;
         this.status = Shipping.STATUS_PREPARATION;
-        DatabaseConnector dbc = DatabaseConnector.getInstance();
-        if(!dbc.saveToFile(this)){
-            System.out.println("Failed save to file");
-        }
+//        DatabaseConnector dbc = DatabaseConnector.getInstance();
+//        if(!dbc.saveToFile(this)){
+//            System.out.println("Failed save to file");
+//        }
     }
 
     private Shipping(String[] data){

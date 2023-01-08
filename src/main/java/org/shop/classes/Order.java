@@ -24,7 +24,7 @@ public class Order implements Convertible {
     private Shipping shipping;
     private Payment payment;
 
-    public Order(int value, ArrayList<Product> products){
+    public Order(float value, ArrayList<Product> products){
         this.value = value;
         this.products = products;
         this.status = STATUS_PAYMENT_FALSE;
@@ -32,14 +32,10 @@ public class Order implements Convertible {
         DatabaseConnector dbc = DatabaseConnector.getInstance();
         if(freeId < 0)
             freeId = dbc.findFreeId(User.class);
-
         this.id = freeId++;
 
-        if(!dbc.saveToFile(this)){
-            System.out.println("Saving to file failed");
-            this.id = -1;
-            freeId -= 1;
-        }
+        this.payment = new Payment(this.id, this.value);
+        this.shipping = null;
     }
 
     private Order(String[] data){
