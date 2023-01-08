@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 
 /**
- * shipping and payment.csv id same as Order id
- * Maybe change productsId to ArrayList<Protuct> and use ID only for save and init
+ * shipping and payment id same as Order id
+ * Maybe change productsId to ArrayList<Product> and use ID only for save and init
  * */
 public class Order implements Convertible {
 
@@ -23,10 +23,22 @@ public class Order implements Convertible {
     private ArrayList<Integer> productsId;
 
     public Order(int value, ArrayList<Integer> productsId){
-        // TODO id from database
         this.value = value;
         this.productsId = productsId;
         this.status = STATUS_PAYMENT_FALSE;
+
+        DatabaseConnector dbc = DatabaseConnector.getInstance();
+        if(freeId < 0)
+            freeId = dbc.findFreeId(User.class);
+
+        this.id = freeId++;
+
+        if(!dbc.saveToFile(this)){
+            System.out.println("Saving to file failed");
+            this.id = -1;
+            freeId -= 1;
+        }
+
     }
 
     private Order(String[] data){
@@ -51,7 +63,7 @@ public class Order implements Convertible {
     }
 
     public void setProducts(ArrayList<Integer> products) {
-        this.productsId = productsId;
+        this.productsId = products;
     }
 
     public float getValue() {
@@ -72,21 +84,21 @@ public class Order implements Convertible {
 
     @Override
     public String convertToRecord() {
-        String str = "";
-        str = String.valueOf(this.id) + ",";
-        str += String.format("%.2f", this.value).replace(",",".") + ",";
-        str += status;
-        str += "," + productsId.toString();
-        str = str.replace(" ", "");
-        str = str.replace("[", "");
-        str = str.replace("]", "");
-        return str;
+        String record = this.id + ",";
+        record += String.format("%.2f", this.value).replace(",",".") + ",";
+        record += status;
+        record += "," + productsId.toString();
+        record = record.replace(" ", "");
+        record = record.replace("[", "");
+        record = record.replace("]", "");
+        return record;
     }
     static Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String[] data = db.recordFromFile(id, Order.class).split(",");
-        if(data.equals(null))
+        String record = db.recordFromFile(id, Order.class);
+        if(record.isEmpty())
             return null;
+        String[] data = record.split(",");
         return new Order(data);
     }
 }

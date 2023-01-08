@@ -4,11 +4,11 @@ import org.shop.interfaces.Convertible;
 
 
 /**
- * @id same as user id
- * @notificationAllow specify if user allows mails
+ * id same as user id
+ * notificationAllow specify if user allows mails
  */
 public class UserSettings implements Convertible{
-    private int id;
+    private final int id;
     private boolean notificationAllow;
 
     public UserSettings(int id){
@@ -39,15 +39,15 @@ public class UserSettings implements Convertible{
 
     @Override
     public String convertToRecord(){
-        String result = id + "," + notificationAllow;
-        return result;
+        return id + "," + notificationAllow;
     }
 
     static Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String[] data = db.recordFromFile(id, UserSettings.class).split(",");
-        if(data.equals(null))
+        String record = db.recordFromFile(id, UserSettings.class);
+        if(record.isEmpty())
             return null;
+        String[] data = record.split(",");
         return new UserSettings(data);
     }
 

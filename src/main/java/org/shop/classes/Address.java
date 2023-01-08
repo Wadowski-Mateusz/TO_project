@@ -2,14 +2,7 @@ package org.shop.classes;
 
 import org.shop.interfaces.Convertible;
 
-import java.util.Objects;
-
 public class Address implements Convertible {
-
-    public static void main(String[] args){
-        Convertible address = convertFromRecord(7);
-        System.out.println(address.convertToRecord());
-    }
 
     private int id;
     private String street;
@@ -89,9 +82,11 @@ public class Address implements Convertible {
 
     static public Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String[] data = db.recordFromFile(id, Address.class).split(",");
-        if(data.equals(null))
+        String record = db.recordFromFile(id, Address.class);
+        if(record.isEmpty())
             return null;
+        String[] data = record.split(",");
+
         return new Address(data);
     }
 

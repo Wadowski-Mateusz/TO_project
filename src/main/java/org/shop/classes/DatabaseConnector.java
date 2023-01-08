@@ -4,6 +4,7 @@ import org.shop.interfaces.Convertible;
 
 import java.io.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -41,7 +42,7 @@ public final class DatabaseConnector {
      * @return list of files in given directory
      */
     public List<String> listFiles(String dir) {
-        return Stream.of(new File(dir).listFiles())
+        return Stream.of(Objects.requireNonNull(new File(dir).listFiles()))
                 .filter(file -> !file.isDirectory())
                 .map(File::getName)
                 .collect(Collectors.toList());
@@ -53,8 +54,8 @@ public final class DatabaseConnector {
      * @return list of files in given directory
      */
     public List<String> listDirectories(String dir) {
-        return Stream.of(new File(dir).listFiles())
-                .filter(file -> file.isDirectory())
+        return Stream.of(Objects.requireNonNull(new File(dir).listFiles()))
+                .filter(File::isDirectory)
                 .map(File::getName)
                 .collect(Collectors.toList());
     }
@@ -111,9 +112,9 @@ public final class DatabaseConnector {
     }
 
     /**
-     * @example: findFreeID(Address.class)
-     * @example: findFreeID(Product.class) - for every class extending Product
-     * @param convertible
+     * example: findFreeID(Address.class)
+     * example: findFreeID(Product.class) - for every class extending Product
+     * @param convertible object which id have to be found
      * @return first free id for given class
      */
     public int findFreeId(Class convertible){
@@ -155,18 +156,16 @@ public final class DatabaseConnector {
     }
 
     /**
-     * @param convertible object convertible to csv with file in date/
+     * @param convertible object convertible to csv with file in "date/"
      * @return path to file for argument
      */
     private String findFile(Convertible convertible){
         String[] classData = convertible.getClass().getName().split("\\.");
         String fileName = classData[classData.length-1].toLowerCase() + ".csv";
 
-        String path =
-                (convertible instanceof Product)
-                        ? findFileRecursive(fileName, DIR_PRODUCTS)
-                        : DIR + fileName;
-        return path;
+        return (convertible instanceof Product)
+                ? findFileRecursive(fileName, DIR_PRODUCTS)
+                : DIR + fileName;
     }
 
     /**
@@ -178,7 +177,7 @@ public final class DatabaseConnector {
         System.out.println("Path:" + path + "\tData: " + convertible.convertToRecord());
         try {
             Writer output = new BufferedWriter(new FileWriter(path, true));
-            output.append(System.lineSeparator() + convertible.convertToRecord());
+            output.append(System.lineSeparator()).append(convertible.convertToRecord());
             output.close();
         } catch (IOException e){
             return false;
@@ -190,7 +189,7 @@ public final class DatabaseConnector {
     /**
      * @param id if of object method has to find
      * @param convertible instance of item we are looking for
-     * @return
+     * @return string containing record from base; empty on failure
      */
     public String recordFromFile(int id, Class convertible)  {
         try {
@@ -210,13 +209,10 @@ public final class DatabaseConnector {
             scanner.close();
             return "";
         } catch (FileNotFoundException e) {
-            System.out.println("No such a file");
+            System.out.println("recordFromFile(): No such a file");
             return "";
-        } catch (InstantiationException e) {
-            System.out.println("Error");
-            return "";
-        } catch (IllegalAccessException e){
-            System.out.println("Error");
+        } catch (InstantiationException | IllegalAccessException e) {
+            System.out.println("recordFromFile() error");
             return "";
         }
     }

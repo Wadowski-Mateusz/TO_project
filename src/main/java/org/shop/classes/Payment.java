@@ -11,8 +11,8 @@ public class Payment implements Convertible {
 
     public static final String status_payment_false = "Nieoplacone";
     public static final String status_payment_true = "Oplacone";
-    private int id;
-    private float value;
+    private final int id;
+    private final float value;
     private String status;
 
     /**
@@ -61,9 +61,10 @@ public class Payment implements Convertible {
 
     static Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String[] data = db.recordFromFile(id, Payment.class).split(",");
-        if(data.equals(null))
+        String record = db.recordFromFile(id, Payment.class);
+        if(record.isEmpty())
             return null;
+        String[] data = record.split(",");
         return new Payment(data);
     }
 

@@ -31,15 +31,15 @@ public abstract class Product implements Convertible {
         this.visibility = visibility;
 
         DatabaseConnector dbc = DatabaseConnector.getInstance();
-        if(this.freeId < 0)
-            this.freeId = dbc.findFreeId(Product.class);
+        if(freeId < 0)
+            freeId = dbc.findFreeId(Product.class);
 
         this.id = freeId++;
 
         if(!dbc.saveToFile(this)){
             System.out.println("Failed save to file");
             this.id = -1;
-            this.freeId -= 1;
+            freeId -= 1;
         }
     }
 
@@ -98,10 +98,6 @@ public abstract class Product implements Convertible {
 
     public static Convertible convertFromRecord(int id){
         throw new UnsupportedOperationException("product.convertFromRecord unsupported");
-//        DatabaseConnector db = DatabaseConnector.getInstance();
-//        String[] data = db.recordFromFile(id, .class).split(",");
-//        if(data.equals(null))
-//            return null;
     }
 
     public String getMark() {

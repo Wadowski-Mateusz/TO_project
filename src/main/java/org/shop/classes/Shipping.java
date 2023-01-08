@@ -3,16 +3,16 @@ package org.shop.classes;
 import org.shop.interfaces.Convertible;
 
 /**
- * @id same as order
- * @address same as user address
+ * id same as order
+ * address same as user address
  * */
 
 public class Shipping implements Convertible {
 
     public static final String STATUS_SHIPPED = "wyslano";
-    public static final String STATUS_RECIVED = "odebrano";
+    public static final String STATUS_RECEIVED = "odebrano";
     public static final String STATUS_PREPARATION = "w przygotowaniu";
-    private int id;
+    private final int id;
     private Address address;
     private String status;
 
@@ -63,9 +63,10 @@ public class Shipping implements Convertible {
 
     static Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String[] data = db.recordFromFile(id, Shipping.class).split(",");
-        if(data.equals(null))
+        String record = db.recordFromFile(id, Shipping.class);
+        if(record.isEmpty())
             return null;
+        String[] data = record.split(",");
         return new Shipping(data);
     }
 

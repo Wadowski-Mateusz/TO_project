@@ -3,7 +3,7 @@ package org.shop.classes;
 // TODO make it convertible
 public class EventNotification {
 
-    private static int freeId = -1;
+    private volatile static int freeId = -1;
     private int id;
     private String message;
 

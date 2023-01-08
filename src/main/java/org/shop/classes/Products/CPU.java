@@ -7,7 +7,7 @@ import org.shop.interfaces.Convertible;
 import java.util.ArrayList;
 
 public class CPU extends Product {
-    public static final String CATEGORY = "computer/coputer_parts/cpu/"; //path in database!
+    public static final String CATEGORY = "computer/computer_parts/cpu/"; //path in database!
 
     public int cores;
     public int threads;

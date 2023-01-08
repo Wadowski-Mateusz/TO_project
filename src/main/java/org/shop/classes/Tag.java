@@ -12,14 +12,14 @@ public class Tag implements Convertible {
         this.name = name;
 
         DatabaseConnector dbc = DatabaseConnector.getInstance();
-        if(this.freeId < 0)
-            this.freeId = dbc.findFreeId(Tag.class);
+        if(freeId < 0)
+            freeId = dbc.findFreeId(Tag.class);
         this.id = freeId++;
 
         if(!dbc.saveToFile(this)){
             System.out.println("Failed save to file");
             this.id = -1;
-            this.freeId -= 1;
+            freeId -= 1;
         }
     }
 
@@ -46,9 +46,10 @@ public class Tag implements Convertible {
 
     static Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String[] data = db.recordFromFile(id, Tag.class).split(",");
-        if(data.equals(null))
+        String record = db.recordFromFile(id, Tag.class);
+        if(record.isEmpty())
             return null;
+        String[] data = record.split(",");
         return new Tag(data);
     }
 }

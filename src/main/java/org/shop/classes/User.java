@@ -34,15 +34,15 @@ public class User implements Convertible {
         this.orderHistory = new ArrayList<>();
 
         DatabaseConnector dbc = DatabaseConnector.getInstance();
-        if(this.freeId < 0)
-            this.freeId = dbc.findFreeId(User.class);
+        if(freeId < 0)
+            freeId = dbc.findFreeId(User.class);
 
         this.id = freeId++;
 
         if(!dbc.saveToFile(this)){
             System.out.println("Saving to file failed");
             this.id = -1;
-            this.freeId -= 1;
+            freeId -= 1;
         }
 
     }
@@ -151,27 +151,27 @@ public class User implements Convertible {
 
     @Override
     public String convertToRecord() {
-        String result = "";
-        result = this.id + ","
+        String record = this.id + ","
                 + this.name + "," + this.surname + ","
                 + this.email + "," + this.password + ","
                 + this.phoneNumber + "," + this.address.getId() + ","
                 + this.cart.getId() + "," + this.settings.getId() + ","
                 + this.role;
         if (this.orderHistory.size() > 0) {
-            result += "," + orderHistory.toString();
-            result = result.replace(" ", "");
-            result = result.replace("[", "");
-            result = result.replace("]", "");
+            record += "," + orderHistory.toString();
+            record = record.replace(" ", "");
+            record = record.replace("[", "");
+            record = record.replace("]", "");
         }
-        return result;
+        return record;
     }
 
     static public Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String[] data = db.recordFromFile(id, User.class).split(",");
-        if(data.equals(null))
+        String record = db.recordFromFile(id, User.class);
+        if(record.isEmpty())
             return null;
+        String[] data = record.split(",");
         return new User(data);
     }
 
