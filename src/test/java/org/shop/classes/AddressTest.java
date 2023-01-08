@@ -12,7 +12,7 @@ class AddressTest {
 
     @BeforeEach
     void init(){
-        address = new Address(0, "street0","house0","zip0","city0","voivodeships0");
+        address = new Address("street0","house0","zip0","city0","voivodeships0");
     }
 
 

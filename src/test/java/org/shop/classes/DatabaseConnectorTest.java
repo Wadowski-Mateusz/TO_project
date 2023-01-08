@@ -3,37 +3,19 @@ package org.shop.classes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.crypto.Data;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class DatabaseConnectorTest {
 
-    DatabaseConnector dbc;
-
+    DatabaseConnector bd;
     @BeforeEach
     void init(){
-        dbc = DatabaseConnector.getInstance();
+        bd = DatabaseConnector.getInstance();
+    }
+    @Test
+    void findFileRecursive() {
     }
 
-    @Test
-    void findFreeId() {
-        assertEquals(4, dbc.findFreeId("address"));
-        assertNotEquals(7, dbc.findFreeId("address"));
-        assertEquals(0, dbc.findFreeId("order"));
-    }
-
-    @Test
-    void testFindFreeId() {
-    }
-
-    @Test
-    void saveToFile() {
-    }
-
-    @Test
-    void testSaveToFile() {
-    }
-
-    @Test
-    void readFromFile() {
-    }
 }

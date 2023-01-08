@@ -10,7 +10,7 @@ public abstract class Product implements Convertible {
 
     public static final String CATEGORY = "";
 
-    volatile static private int freeId = -1;
+    static private int freeId = -1;
     private int id;
     private String name;
     private String mark;
@@ -20,6 +20,19 @@ public abstract class Product implements Convertible {
     private ArrayList<Product> suggested;
     private int howManyStock;
     private Boolean visibility;
+
+    public Product(String name, String mark, float basePrice, float discountPrice, ArrayList<Tag> tags, ArrayList<Product> suggested, int howManyStock, Boolean visibility) {
+        this.name = name;
+        this.mark = mark;
+        this.basePrice = basePrice;
+        this.discountPrice = discountPrice;
+        this.tags = tags;
+        this.suggested = suggested;
+        this.howManyStock = howManyStock;
+        this.visibility = visibility;
+    }
+
+
 
     public int getId() {
         return id;

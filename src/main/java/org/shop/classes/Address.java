@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Address implements Convertible {
 
-    volatile static private int freeId = -1;   //jeśli == -1, klasa sprawdzi w pliku pierwsze wolne id; jeśli >=0, to uzyje tego id i zikremenruje
+    volatile private int freeId = -1;   //jeśli == -1, klasa sprawdzi w pliku pierwsze wolne id; jeśli >=0, to uzyje tego id i zikrementuje
     private int id;
     private String street;
     private String house;
@@ -14,14 +14,26 @@ public class Address implements Convertible {
     private String city;
     private String voivodeships;
 
+    public Address(String street, String house, String zip, String city, String voivodeships) {
 
-    public Address(int id, String street, String house, String zip, String city, String voivodeships) {
-        this.id = id;
         this.street = street;
         this.house = house;
         this.zip = zip;
         this.city = city;
         this.voivodeships = voivodeships;
+
+        DatabaseConnector dbc = DatabaseConnector.getInstance();
+        if(this.freeId < 0)
+            this.freeId = dbc.findFreeId(Address.class);
+
+        this.id = freeId++;
+
+       if(!dbc.saveToFile(this)){
+           System.out.println("Failed save to file");
+           this.id = -1;
+           this.freeId -= 1;
+       }
+
     }
 
     private Address(String[] data){

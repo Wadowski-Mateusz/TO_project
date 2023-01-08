@@ -1,1 +1,1 @@
-Tutaj będą znajdować się dane użytkowników, przedmiotów, itd.
+Files cannot have empty line at the end.
