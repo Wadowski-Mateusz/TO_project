@@ -17,6 +17,11 @@ public class Cart implements Convertible {
         this.id = id;
         this.value = 0.0F;
         this.products = new ArrayList<>();
+        DatabaseConnector dbc = DatabaseConnector.getInstance();
+        dbc.loadFromFile(id, Address.class);
+        if(!dbc.saveToFile(this)){
+            System.out.println("Saving to file failed");
+        }
     }
 
     public Cart(int id, float value, ArrayList<Product> products){
@@ -69,7 +74,7 @@ public class Cart implements Convertible {
 
     static public Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.recordFromFile(id, Cart.class);
+        String record = db.loadFromFile(id, Cart.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");

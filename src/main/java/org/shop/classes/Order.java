@@ -95,7 +95,7 @@ public class Order implements Convertible {
     }
     static Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.recordFromFile(id, Order.class);
+        String record = db.loadFromFile(id, Order.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");

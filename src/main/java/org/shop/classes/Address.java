@@ -23,6 +23,7 @@ public class Address implements Convertible {
         this.voivodeships = "";
 
         DatabaseConnector dbc = DatabaseConnector.getInstance();
+        dbc.loadFromFile(id, Address.class);
         if(!dbc.saveToFile(this)){
             System.out.println("Saving to file failed");
         }
@@ -82,7 +83,7 @@ public class Address implements Convertible {
 
     static public Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.recordFromFile(id, Address.class);
+        String record = db.loadFromFile(id, Address.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");

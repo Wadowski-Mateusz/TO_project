@@ -174,7 +174,7 @@ public final class DatabaseConnector {
      */
     public boolean saveToFile(Convertible convertible){
         String path = findFile(convertible);
-        System.out.println("Path:" + path + "\tData: " + convertible.convertToRecord());
+//        System.out.println("Path:" + path + "\tData: " + convertible.convertToRecord());
         try {
             Writer output = new BufferedWriter(new FileWriter(path, true));
             output.append(System.lineSeparator()).append(convertible.convertToRecord());
@@ -191,7 +191,7 @@ public final class DatabaseConnector {
      * @param convertible instance of item we are looking for
      * @return string containing record from base; empty on failure
      */
-    public String recordFromFile(int id, Class convertible)  {
+    public String loadFromFile(int id, Class convertible)  {
         try {
             Object ob = convertible.newInstance();
             String path = findFile((Convertible) ob);
@@ -230,7 +230,7 @@ public final class DatabaseConnector {
             String line;
             int id = Integer.parseInt(convertible.convertToRecord().split(",")[0]);
             while ((line = file.readLine()) != null) {
-                System.out.println(line);
+//                System.out.println(line);
                 if(Integer.parseInt(line.split(",")[0]) == id) {
                     line = convertible.convertToRecord();
                     inputBuffer.append(line).append('\n');

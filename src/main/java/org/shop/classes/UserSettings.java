@@ -14,6 +14,11 @@ public class UserSettings implements Convertible{
     public UserSettings(int id){
         this.id = id;
         this.notificationAllow = false;
+        DatabaseConnector dbc = DatabaseConnector.getInstance();
+        dbc.loadFromFile(id, Address.class);
+        if(!dbc.saveToFile(this)){
+            System.out.println("Saving to file failed");
+        }
     }
 
     private UserSettings(String[] data){
@@ -44,7 +49,7 @@ public class UserSettings implements Convertible{
 
     static Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.recordFromFile(id, UserSettings.class);
+        String record = db.loadFromFile(id, UserSettings.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");

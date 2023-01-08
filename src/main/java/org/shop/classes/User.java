@@ -21,15 +21,18 @@ public class User implements Convertible {
     private String role;
     private ArrayList<Order> orderHistory;
 
+
+
     public User(String password, String email){
+
         this.name = "";
         this.surname = "";
         this.email = email;
         this.password = password;
         this.phoneNumber = "";
-        this.address = new Address(this.id); // TODO look in files
-        this.cart = new Cart(this.id); // TODO look in files
-        this.settings = new UserSettings(this.id); // TODO look in files
+        this.address = new Address(this.id);
+        this.cart = new Cart(this.id);
+        this.settings = new UserSettings(this.id);
         this.role = User.STANDARD;
         this.orderHistory = new ArrayList<>();
 
@@ -168,7 +171,7 @@ public class User implements Convertible {
 
     static public Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.recordFromFile(id, User.class);
+        String record = db.loadFromFile(id, User.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");
