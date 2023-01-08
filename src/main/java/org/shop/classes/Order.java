@@ -21,6 +21,8 @@ public class Order implements Convertible {
     private float value;
     private String status;
     private ArrayList<Product> products;
+    private Shipping shipping;
+    private Payment payment;
 
     public Order(int value, ArrayList<Product> products){
         this.value = value;
@@ -44,8 +46,10 @@ public class Order implements Convertible {
         this.id = Integer.parseInt(data[0]);
         this.value = Float.parseFloat(data[1]);
         this.status = data[2];
+        this.shipping = (Shipping) Shipping.convertFromRecord(Integer.parseInt(data[3]));
+        this.payment = (Payment) Payment.convertFromRecord(Integer.parseInt(data[4]));
         this.products = new ArrayList<>();
-        for(int i = 3; i < data.length; i++)
+        for(int i = 5; i < data.length; i++)
             products.add((Product) Product.convertFromRecord(Integer.parseInt(data[i])));
     }
 
@@ -53,8 +57,20 @@ public class Order implements Convertible {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Shipping getShipping() {
+        return shipping;
+    }
+
+    public void setShipping(Shipping shipping) {
+        this.shipping = shipping;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
     }
 
     public ArrayList<Product> getProducts() {
@@ -86,6 +102,8 @@ public class Order implements Convertible {
         String record = this.id + ",";
         record += String.format("%.2f", this.value).replace(",",".") + ",";
         record += status;
+        record += this.shipping.getId();
+        record += this.payment.getId();
         for(Product p : products)
             record += "," + p.getId();
         return record;
