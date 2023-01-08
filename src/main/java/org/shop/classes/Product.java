@@ -3,8 +3,8 @@ package org.shop.classes;
 import org.shop.interfaces.Convertible;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
-import static java.lang.Float.NaN;
 
 // TODO convertible methods
 
@@ -15,18 +15,16 @@ public abstract class Product implements Convertible {
     private int id;
     private String name;
     private String mark;
-    private float basePrice;
-    private float discountPrice;
+    private float price;
     private ArrayList<Tag> tags;
     private ArrayList<Product> suggested;
     private int howManyStock;
     private Boolean visibility;
 
-    public Product(String name, String mark, float basePrice, float discountPrice, ArrayList<Tag> tags, ArrayList<Product> suggested, int howManyStock, Boolean visibility) {
+    public Product(String name, String mark, float price, ArrayList<Tag> tags, ArrayList<Product> suggested, int howManyStock, Boolean visibility) {
         this.name = name;
         this.mark = mark;
-        this.basePrice = basePrice;
-        this.discountPrice = discountPrice;
+        this.price = price;
         this.tags = tags;
         this.suggested = suggested;
         this.howManyStock = howManyStock;
@@ -51,20 +49,12 @@ public abstract class Product implements Convertible {
         return id;
     }
 
-    public float getBasePrice() {
-        return basePrice;
+    public float getPrice() {
+        return price;
     }
 
-    public void setBasePrice(float basePrice) {
-        this.basePrice = basePrice;
-    }
-
-    public float getDiscountPrice() {
-        return discountPrice;
-    }
-
-    public void setDiscountPrice(float discountPrice) {
-        this.discountPrice = discountPrice;
+    public void setPrice(float price) {
+        this.price = price;
     }
 
     public ArrayList<Tag> getTags() {
@@ -106,7 +96,7 @@ public abstract class Product implements Convertible {
         throw new UnsupportedOperationException("product.convertToRecord unsupported");
     }
 
-    public Convertible convertFromRecord(int id){
+    public static Convertible convertFromRecord(int id){
         throw new UnsupportedOperationException("product.convertFromRecord unsupported");
 //        DatabaseConnector db = DatabaseConnector.getInstance();
 //        String[] data = db.recordFromFile(id, .class).split(",");
@@ -130,4 +120,16 @@ public abstract class Product implements Convertible {
         this.name = name;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return id == product.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

@@ -189,7 +189,7 @@ public final class DatabaseConnector {
 
     /**
      * @param id if of object method has to find
-     * @param convertible istance of item we are looking for
+     * @param convertible instance of item we are looking for
      * @return
      */
     public String recordFromFile(int id, Class convertible)  {
@@ -208,16 +208,16 @@ public final class DatabaseConnector {
                 }
             }
             scanner.close();
-            return null;
+            return "";
         } catch (FileNotFoundException e) {
             System.out.println("No such a file");
-            return null;
+            return "";
         } catch (InstantiationException e) {
             System.out.println("Error");
-            return null;
+            return "";
         } catch (IllegalAccessException e){
             System.out.println("Error");
-            return null;
+            return "";
         }
     }
 
