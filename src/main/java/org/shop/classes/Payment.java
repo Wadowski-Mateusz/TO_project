@@ -2,11 +2,6 @@ package org.shop.classes;
 
 import org.shop.interfaces.Convertible;
 
-//TODO
-// Payment is realised by outside app
-// (we only get result)
-// we can "roll a dice" for payment realisation
-
 public class Payment implements Convertible {
 
     public static final String status_payment_false = "Nieoplacone";

@@ -20,11 +20,11 @@ public class Order implements Convertible {
     private int id;
     private float value;
     private String status;
-    private ArrayList<Integer> productsId;
+    private ArrayList<Product> products;
 
-    public Order(int value, ArrayList<Integer> productsId){
+    public Order(int value, ArrayList<Product> products){
         this.value = value;
-        this.productsId = productsId;
+        this.products = products;
         this.status = STATUS_PAYMENT_FALSE;
 
         DatabaseConnector dbc = DatabaseConnector.getInstance();
@@ -38,16 +38,15 @@ public class Order implements Convertible {
             this.id = -1;
             freeId -= 1;
         }
-
     }
 
     private Order(String[] data){
         this.id = Integer.parseInt(data[0]);
         this.value = Float.parseFloat(data[1]);
         this.status = data[2];
-        this.productsId = new ArrayList<>();
+        this.products = new ArrayList<>();
         for(int i = 3; i < data.length; i++)
-            productsId.add(Integer.parseInt(data[i]));
+            products.add((Product) Product.convertFromRecord(Integer.parseInt(data[i])));
     }
 
     public int getId() {
@@ -58,12 +57,12 @@ public class Order implements Convertible {
         this.id = id;
     }
 
-    public ArrayList<Integer> getProducts() {
-        return productsId;
+    public ArrayList<Product> getProducts() {
+        return products;
     }
 
-    public void setProducts(ArrayList<Integer> products) {
-        this.productsId = products;
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
     }
 
     public float getValue() {
@@ -87,10 +86,8 @@ public class Order implements Convertible {
         String record = this.id + ",";
         record += String.format("%.2f", this.value).replace(",",".") + ",";
         record += status;
-        record += "," + productsId.toString();
-        record = record.replace(" ", "");
-        record = record.replace("[", "");
-        record = record.replace("]", "");
+        for(Product p : products)
+            record += "," + p.getId();
         return record;
     }
     static Convertible convertFromRecord(int id) {

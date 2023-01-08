@@ -17,21 +17,21 @@ public class Cart implements Convertible {
         this.id = id;
         this.value = 0.0F;
         this.products = new ArrayList<>();
+
         DatabaseConnector dbc = DatabaseConnector.getInstance();
-        dbc.loadFromFile(id, Address.class);
-        if(!dbc.saveToFile(this)){
+        if(!dbc.saveToFile(this))
             System.out.println("Saving to file failed");
-        }
+
     }
 
     public Cart(int id, float value, ArrayList<Product> products){
         this.id = id;
         this.value = value;
         this.products = products;
+
         DatabaseConnector dbc = DatabaseConnector.getInstance();
-        if(!dbc.saveToFile(this)){
+        if(!dbc.saveToFile(this))
             System.out.println("Failed save to file");
-        }
     }
 
 //    private Cart(String[] data){
@@ -78,7 +78,6 @@ public class Cart implements Convertible {
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");
-
 
         CartBuilder builder = new CartBuilder(Integer.parseInt(data[0]),
                                                 Float.parseFloat(data[1]));

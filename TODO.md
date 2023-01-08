@@ -2,7 +2,6 @@ Cart:
 
     int createOrder();
 
-
  Product:
 
     convertToRecord() - How to convert, if product is using 2 containers
@@ -12,20 +11,18 @@ EventNoticication:
 
     Conversion to and from string
 
-
 DatabaseConnector:
 
     Load all items from given category
 
-
 User:
-    
-    Change constructor default and User(String[])
-    Login()
-    Register()
-    orderHistory
 
+    orderHistory
 
 Wzorce.
 
 "volatile" a "synchronization"
+
+Pożądane zmiany w danych można zapisać
+    
+    dbc.updateRecord(Convertible convertible)

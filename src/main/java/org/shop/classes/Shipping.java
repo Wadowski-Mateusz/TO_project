@@ -27,18 +27,13 @@ public class Shipping implements Convertible {
     }
 
     private Shipping(String[] data){
-        //TODO address from base
         this.id = Integer.parseInt(data[0]);
-//        this.address = data[1];
+        this.address = (Address) Address.convertFromRecord(Integer.parseInt(data[1]));
         this.status = data[2];
     }
 
     public int getId() {
         return id;
-    }
-
-    public int getAddressId() {
-        return address.getId();
     }
 
     public Address getAddress() {
@@ -69,6 +64,5 @@ public class Shipping implements Convertible {
         String[] data = record.split(",");
         return new Shipping(data);
     }
-
 
 }

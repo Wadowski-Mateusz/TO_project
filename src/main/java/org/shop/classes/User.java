@@ -51,16 +51,18 @@ public class User implements Convertible {
     }
 
     public User(String[] data){
-        // TODO find address, cart and settings in base
         this.id = Integer.parseInt(data[0]);
         this.name = data[1];
         this.surname = data[2];
         this.email = data[3];
         this.password = data[4];
         this.phoneNumber = data[5];
-//        this.address = data[6];
-//        this.cart = data[7];
-//        this.settings = data[8];
+
+        DatabaseConnector dbc = DatabaseConnector.getInstance();
+
+        this.address = (Address) Address.convertFromRecord(Integer.parseInt(data[6]));
+        this.cart = (Cart) Cart.convertFromRecord(Integer.parseInt(data[7]));
+        this.settings = (UserSettings) UserSettings.convertFromRecord(Integer.parseInt(data[8]));
         this.role = data[9];
         this.orderHistory = new ArrayList<>();
 //        for(int i = 10; i < data.length; i++)

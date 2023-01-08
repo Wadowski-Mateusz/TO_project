@@ -15,7 +15,6 @@ public class UserSettings implements Convertible{
         this.id = id;
         this.notificationAllow = false;
         DatabaseConnector dbc = DatabaseConnector.getInstance();
-        dbc.loadFromFile(id, Address.class);
         if(!dbc.saveToFile(this)){
             System.out.println("Saving to file failed");
         }

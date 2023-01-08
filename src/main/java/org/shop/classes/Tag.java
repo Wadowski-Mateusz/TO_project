@@ -4,7 +4,7 @@ import org.shop.interfaces.Convertible;
 
 public class Tag implements Convertible {
 
-    private static int freeId = -1;
+    private volatile static int freeId = -1;
     private int id;
     private String name;
 

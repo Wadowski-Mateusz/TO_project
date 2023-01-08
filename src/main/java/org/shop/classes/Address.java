@@ -11,9 +11,6 @@ public class Address implements Convertible {
     private String city;
     private String voivodeships;
 
-    public Address(){
-    }
-
     public Address(int id) {
         this.id = id;
         this.street = "";
@@ -23,7 +20,6 @@ public class Address implements Convertible {
         this.voivodeships = "";
 
         DatabaseConnector dbc = DatabaseConnector.getInstance();
-        dbc.loadFromFile(id, Address.class);
         if(!dbc.saveToFile(this)){
             System.out.println("Saving to file failed");
         }
