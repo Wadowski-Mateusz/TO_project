@@ -37,12 +37,12 @@ public class ServerApp {
 //            String buf = myInput.readLine();
 //            if (buf != null){
 //                System.out.println("buf: " + buf);
-//                myOutput.print("recevied");
+//                myOutput.print("received");
 //            }
 //
 //            // Closing the connection
 //            socket.close();
-//            System.out.println("Sercer close");
+//            System.out.println("Server close");
 //
 //        } catch (IOException e){
 //            e.printStackTrace();
