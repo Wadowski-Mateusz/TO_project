@@ -74,8 +74,8 @@ public class Cart implements Convertible {
             return null;
         String[] data = record.split(",");
 
-        CartBuilder builder = Cart.getBuilder();
-        builder.setId(Integer.parseInt(data[0]));
+        CartBuilder builder = Cart.getBuilder()
+                .setId(Integer.parseInt(data[0]));
 
         for(int i = 2; i < data.length; i++)
             builder.addProduct(

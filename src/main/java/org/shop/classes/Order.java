@@ -97,13 +97,14 @@ public class Order implements Convertible {
     public String convertToRecord() {
         String record = this.id + ",";
         record += String.format("%.2f", this.value).replace(",",".") + ",";
-        record += status;
-        record += this.shipping.getId();
+        record += status + ",";
+        record += this.shipping.getId() + ",";
         record += this.payment.getId();
         for(Product p : products)
             record += "," + p.getId();
         return record;
     }
+
     static Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
         String record = db.loadFromFile(id, Order.class);

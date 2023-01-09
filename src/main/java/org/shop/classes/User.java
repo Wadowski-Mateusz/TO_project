@@ -41,32 +41,30 @@ public class User implements Convertible {
             freeId = dbc.findFreeId(User.class);
 
         this.id = freeId++;
-
-        if(!dbc.saveToFile(this)){
-            System.out.println("Saving to file failed");
-            this.id = -1;
-            freeId -= 1;
-        }
+//
+//        if(!dbc.saveToFile(this)){
+//            System.out.println("Saving to file failed");
+//            this.id = -1;
+//            freeId -= 1;
+//        }
 
     }
 
     public User(String[] data){
-        this.id = Integer.parseInt(data[0]);
-        this.name = data[1];
-        this.surname = data[2];
-        this.email = data[3];
-        this.password = data[4];
-        this.phoneNumber = data[5];
-
-        DatabaseConnector dbc = DatabaseConnector.getInstance();
-
-        this.address = (Address) Address.convertFromRecord(Integer.parseInt(data[6]));
-        this.cart = (Cart) Cart.convertFromRecord(Integer.parseInt(data[7]));
-        this.settings = (UserSettings) UserSettings.convertFromRecord(Integer.parseInt(data[8]));
-        this.role = data[9];
+        int i = 0;
+        this.id = Integer.parseInt(data[i++]);
+        this.name = data[i++];
+        this.surname = data[i++];
+        this.email = data[i++];
+        this.password = data[i++];
+        this.phoneNumber = data[i++];
+        this.address = (Address) Address.convertFromRecord(Integer.parseInt(data[i++]));
+        this.cart = (Cart) Cart.convertFromRecord(Integer.parseInt(data[i++]));
+        this.settings = (UserSettings) UserSettings.convertFromRecord(Integer.parseInt(data[i++]));
+        this.role = data[i++];
         this.orderHistory = new ArrayList<>();
-//        for(int i = 10; i < data.length; i++)
-//            orderHistory.add(data[i]);
+        for(int j = i; j < data.length; j++)
+            orderHistory.add((Order) Order.convertFromRecord(Integer.parseInt(data[j])));
     }
 
 
@@ -162,12 +160,10 @@ public class User implements Convertible {
                 + this.phoneNumber + "," + this.address.getId() + ","
                 + this.cart.getId() + "," + this.settings.getId() + ","
                 + this.role;
-        if (this.orderHistory.size() > 0) {
-            record += "," + orderHistory.toString();
-            record = record.replace(" ", "");
-            record = record.replace("[", "");
-            record = record.replace("]", "");
-        }
+
+        for (Order o : orderHistory)
+            record += ", " + o.getId();
+
         return record;
     }
 

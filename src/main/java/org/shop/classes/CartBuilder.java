@@ -12,24 +12,6 @@ public class CartBuilder {
 
     }
 
-//    public CartBuilder(int id){
-//        this.cartId = id;
-//        this.products = new ArrayList<>();
-//        this.value = 0;
-//    }
-//
-//    public CartBuilder(int id, float value){
-//        this.cartId = id;
-//        this.products = new ArrayList<>();
-//        this.value = value;
-//    }
-//
-//    public CartBuilder(Cart cart){
-//        this.cartId = cart.getId();
-//        this.products = cart.getProducts();
-//        this.value = cart.getValue();
-//    }
-
     public CartBuilder setId(int id){
         this.id = id;
         return this;
