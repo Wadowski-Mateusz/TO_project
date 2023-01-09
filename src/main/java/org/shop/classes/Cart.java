@@ -34,6 +34,11 @@ public class Cart implements Convertible {
             System.out.println("Failed save to file");
     }
 
+
+    public static CartBuilder getBuilder(){
+        return new CartBuilder();
+    }
+
     public int getId() {
         return id;
     }
@@ -69,8 +74,8 @@ public class Cart implements Convertible {
             return null;
         String[] data = record.split(",");
 
-        CartBuilder builder = new CartBuilder(Integer.parseInt(data[0]),
-                                                Float.parseFloat(data[1]));
+        CartBuilder builder = Cart.getBuilder();
+        builder.setId(Integer.parseInt(data[0]));
 
         for(int i = 2; i < data.length; i++)
             builder.addProduct(
