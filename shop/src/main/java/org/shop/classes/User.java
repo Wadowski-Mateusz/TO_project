@@ -15,6 +15,7 @@ public class User {
     private UserSettings settings;
     private String role;
     private ArrayList<Order> orderHistory;
+    private boolean isAdmin;
 
     public int getId() {
         return id;
@@ -102,6 +103,14 @@ public class User {
 
     public void setOrderHistory(ArrayList<Order> orderHistory) {
         this.orderHistory = orderHistory;
+    }
+
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    public boolean getIsAdmin() {
+        return isAdmin;
     }
 
 }
