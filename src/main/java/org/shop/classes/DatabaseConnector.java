@@ -97,7 +97,6 @@ public final class DatabaseConnector {
                 int foundId = maxIdFile(path+file);
                 if (foundId > maxId)
                     maxId = foundId;
-
             }
             return maxId;
         }
@@ -127,11 +126,25 @@ public final class DatabaseConnector {
     }
 
     /**
+     * Returns savefile for convertible*/
+    public String findFile(Convertible convertible){
+        String[] classData = convertible.getClass().getName().split("\\.");
+        return classData[classData.length-1].toLowerCase() + ".csv";
+    }
+
+    /**
+     * Returns savefile for convertible.class*/
+    public String findFile(Class convertible){
+        String[] classData = convertible.getName().split("\\.");
+        return classData[classData.length-1].toLowerCase() + ".csv";
+    }
+
+    /**
      * @param lookFor look for file, example "user.csv"
      * @param lookIn look in this directory and subdirectories
      * @return on success, path to file; on failure empty string
      */
-    private String findFileRecursive(String lookFor, String lookIn){
+    private String findFilePathRecursive(String lookFor, String lookIn){
 
         String foundPath = "";
 
@@ -145,7 +158,7 @@ public final class DatabaseConnector {
         }
 
         for(String directory : directories){
-            foundPath = findFileRecursive(lookFor, lookIn + directory + "/");
+            foundPath = findFilePathRecursive(lookFor, lookIn + directory + "/");
             if(foundPath.contains(".csv"))
                 break;
             else
@@ -159,21 +172,35 @@ public final class DatabaseConnector {
      * @param convertible object convertible to csv with file in "date/"
      * @return path to file for argument
      */
-    private String findFile(Convertible convertible){
-        String[] classData = convertible.getClass().getName().split("\\.");
-        String fileName = classData[classData.length-1].toLowerCase() + ".csv";
+    private String findFilePath(Convertible convertible){
+        String fileName = findFile(convertible);
+        System.out.println("[findFile] filename:" + fileName);
 
         return (convertible instanceof Product)
-                ? findFileRecursive(fileName, DIR_PRODUCTS)
+                ? findFilePathRecursive(fileName, DIR_PRODUCTS)
                 : DIR + fileName;
     }
+
+    /**
+     * @param convertible object convertible to csv with file in "date/"
+     * @return path to file for argument
+     */
+    private String findFilePath(Class convertible){
+        String fileName = findFile(convertible);
+        System.out.println("[findFile] filename:" + fileName);
+
+        return (convertible.equals(Product.class))
+                ? findFilePathRecursive(fileName, DIR_PRODUCTS)
+                : DIR + fileName;
+    }
+
 
     /**
      * @param convertible object to save to database
      * @return on success returns true; on failure returns false
      */
     public boolean saveToFile(Convertible convertible){
-        String path = findFile(convertible);
+        String path = findFilePath(convertible);
 //        System.out.println("Path:" + path + "\tData: " + convertible.convertToRecord());
         try {
             Writer output = new BufferedWriter(new FileWriter(path, true));
@@ -193,10 +220,8 @@ public final class DatabaseConnector {
      */
     public String loadFromFile(int id, Class convertible)  {
         try {
-            Object ob = convertible.newInstance();
-            String path = findFile((Convertible) ob);
-            File file = new File(path);
-            Scanner scanner = new Scanner(file);
+            String path = findFilePath(convertible);
+            Scanner scanner = new Scanner(new File(path));
             scanner.nextLine(); //header
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -209,10 +234,7 @@ public final class DatabaseConnector {
             scanner.close();
             return "";
         } catch (FileNotFoundException e) {
-            System.out.println("recordFromFile(): No such a file");
-            return "";
-        } catch (InstantiationException | IllegalAccessException e) {
-            System.out.println("recordFromFile() error");
+            System.out.println("loadFromFile(): No such a file");
             return "";
         }
     }
@@ -224,7 +246,7 @@ public final class DatabaseConnector {
      */
     public boolean updateRecord(Convertible convertible){
         try {
-            String path = findFile(convertible);
+            String path = findFilePath(convertible);
             BufferedReader file = new BufferedReader(new FileReader(path));
             StringBuffer inputBuffer = new StringBuffer();
             String line;
