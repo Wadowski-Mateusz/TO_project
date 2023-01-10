@@ -3,9 +3,7 @@ package org.shop.classes;
 import org.shop.interfaces.Convertible;
 
 import java.io.*;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -133,15 +131,16 @@ public final class DatabaseConnector {
     }
 
     /**
-     * Returns savefile for convertible.class*/
+     * Returns file for convertible.class*/
     public String findFile(Class convertible){
         String[] classData = convertible.getName().split("\\.");
         return classData[classData.length-1].toLowerCase() + ".csv";
     }
 
     /**
-     * @param lookFor look for file, example "user.csv"
-     * @param lookIn look in this directory and subdirectories
+     * example: findFilePathRecursive("microwave.csv", DatabaseConnector.DIR_PRODUCTS)
+     * @param lookFor looks for file, example "microwave.csv"
+     * @param lookIn looks in this directory and subdirectories
      * @return on success, path to file; on failure empty string
      */
     private String findFilePathRecursive(String lookFor, String lookIn){
@@ -165,11 +164,10 @@ public final class DatabaseConnector {
                 foundPath = "";
         }
         return foundPath;
-
     }
 
     /**
-     * @param convertible object convertible to csv with file in "date/"
+     * @param convertible object convertible with file in "date/*"
      * @return path to file for argument
      */
     private String findFilePath(Convertible convertible){
@@ -182,7 +180,7 @@ public final class DatabaseConnector {
     }
 
     /**
-     * @param convertible object convertible to csv with file in "date/"
+     * @param convertible convertible.class with file in "date/*"
      * @return path to file for argument
      */
     private String findFilePath(Class convertible){
@@ -275,12 +273,71 @@ public final class DatabaseConnector {
     }
 
 
-    /**
-     * @param category category of product ex. "microwave"
-     * @return
-     */
-    public String[] loadAllProductsFromCategory(String category){
-        return null;
+    public static void main(String[] args){
+        System.out.println();
+        DatabaseConnector db = getInstance();
+
+        TreeMap<Integer, String> map = db.listProductsFromCategory("microwave");
+        if (map == null)
+            System.out.println("Problem; zła kategoria?");
+        map.forEach((k, v) -> System.out.println((k + " : " + v)));
+
+        System.out.println();
+
+        map = db.listAllProductsFromCategory("microwave");
+        if (map == null)
+            System.out.println("Problem; zła kategoria?");
+        map.forEach((k, v) -> System.out.println((k + " : " + v)));
+
     }
+
+
+    /**
+     * example: listProductsFromCategory("microwave")
+     * Returns map of products from given category, which are visible and in stock
+     * @param category category of product ex. "microwave"
+     * @return on success: map filled with ids and names; on failure: null
+     */
+    public TreeMap<Integer, String> listProductsFromCategory(String category){
+        TreeMap<Integer, String> output = new TreeMap<>();
+        String path = findFilePathRecursive(category + ".csv", DIR_PRODUCTS);
+        try (Scanner scanner = new Scanner(new File(path))){
+            scanner.nextLine(); //header
+            while (scanner.hasNextLine()) {
+                String[] line = scanner.nextLine().split(",");
+                if(Boolean.parseBoolean(line[6]) && Integer.parseInt(line[5]) > 0 )
+                    output.put(Integer.valueOf(line[0]), line[2]);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("loadFromFile(): No such a file as " + path);
+            return null;
+        }
+        return output;
+    }
+
+
+    /**
+     * Only admin should be able to use it
+     * example: listProductsFromCategory("microwave")
+     * Returns list of all products from given category
+     * @param category category of product ex. "microwave"
+     * @return on success: list filled with ids and names; on failure: null
+     */
+    public TreeMap<Integer, String> listAllProductsFromCategory(String category){
+        TreeMap<Integer, String> output = new TreeMap<>();
+        String path = findFilePathRecursive(category + ".csv", DIR_PRODUCTS);
+        try (Scanner scanner = new Scanner(new File(path))){
+            scanner.nextLine(); //header
+            while (scanner.hasNextLine()) {
+                String[] line = scanner.nextLine().split(",");
+                output.put(Integer.valueOf(line[0]), line[2]);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("loadFromFile(): No such a file");
+            return null;
+        }
+        return output;
+    }
+
 
 }

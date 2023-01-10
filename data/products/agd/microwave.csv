@@ -1,4 +1,4 @@
 id,category,name,mark,price,howManystock,visibility,[tags;],[power:power;volume:volume]
-3,microwave,Mikrofala 32E,425.23,12412,true,[7;11],[power:170W;volume:2L]
-7,...
-11,...
+3,microwave,Mikrofala 32E,Szajs,425.23,12412,true,[7;11],[power:170W;volume:2L]
+7,microwave,Promieniowanie,Czarn,255.4,213,false,[3;11]
+11,microvawe,Unhappy,SAd,234,234,true,[3;7]
