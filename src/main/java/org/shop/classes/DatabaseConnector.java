@@ -274,4 +274,13 @@ public final class DatabaseConnector {
         }
     }
 
+
+    /**
+     * @param category category of product ex. "microwave"
+     * @return
+     */
+    public String[] loadAllProductsFromCategory(String category){
+        return null;
+    }
+
 }
