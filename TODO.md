@@ -5,18 +5,16 @@ Order:
  Product:
 
     Jak ma wyglądać sugerowanie produktów?
-    Jak je wczytywać do produktu? Bo jeśli to ma być lista produktów,\
+    Jak je wczytywać do produktu? Bo jeśli to ma być lista produktów,
         to one też będą generować swoje sugerowane i mamy nieskończoną pętlę
 
 EventNoticication:
 
-    Conversion to and from string
+    Konwersja na i ze stringa
 
 DatabaseConnector:
 
-    Load all items from given category
-    Korzystać z adaptera by przerabiać Producty json na csv
-    Ładowanie pojedyńczego produktu z bazy (Adapter?)
+    Korzystać z adaptera by przerabiać Producty json na csv (jeśli to wykonalne)
 
 Tworzenie zamówienia:
     
@@ -33,6 +31,7 @@ Wzorce projektowe:\
 &emsp;1) Łańcuch zobowiązań - rozdzielenie użytkowników zwykłych od uprzywilejowanych\
 &emsp;2) Obserwator - wysyłanie powiadomień email o promocjach, protuktach (wydarzeniach)\
 &emsp;3) Mediator - zarządzanie informacjami na temat użytkownika
+
 
 "volatile" a "synchronization"
 

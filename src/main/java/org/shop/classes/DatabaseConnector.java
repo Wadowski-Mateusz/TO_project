@@ -2,6 +2,7 @@ package org.shop.classes;
 
 import org.shop.interfaces.Convertible;
 
+import javax.xml.crypto.Data;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -280,7 +281,7 @@ public final class DatabaseConnector {
      */
     public TreeMap<Integer, String> listProductsFromCategory(String category){
         TreeMap<Integer, String> output = new TreeMap<>();
-        String path = findFilePathRecursive(category + ".csv", DIR_PRODUCTS);
+        String path = findFilePathRecursive(category + ".csv", DatabaseConnector.DIR_PRODUCTS);
         try (Scanner scanner = new Scanner(new File(path))){
             scanner.nextLine(); //header
             while (scanner.hasNextLine()) {
@@ -289,7 +290,7 @@ public final class DatabaseConnector {
                     output.put(Integer.valueOf(line[0]), line[2]);
             }
         } catch (FileNotFoundException e) {
-            System.out.println("loadFromFile(): No such a file as " + path);
+            System.out.println("listProductsFromCategory(): No such a file as " + path);
             return null;
         }
         return output;
@@ -305,7 +306,7 @@ public final class DatabaseConnector {
      */
     public TreeMap<Integer, String> listAllProductsFromCategory(String category){
         TreeMap<Integer, String> output = new TreeMap<>();
-        String path = findFilePathRecursive(category + ".csv", DIR_PRODUCTS);
+        String path = findFilePathRecursive(category + ".csv", DatabaseConnector.DIR_PRODUCTS);
         try (Scanner scanner = new Scanner(new File(path))){
             scanner.nextLine(); //header
             while (scanner.hasNextLine()) {
@@ -313,11 +314,34 @@ public final class DatabaseConnector {
                 output.put(Integer.valueOf(line[0]), line[2]);
             }
         } catch (FileNotFoundException e) {
-            System.out.println("loadFromFile(): No such a file");
+            System.out.println("listAllProductsFromCategory(): No such a file");
             return null;
         }
         return output;
     }
 
+    /**
+     * Looks for user with given data in base
+     * @param email user mail
+     * @param password user password
+     * @return on success: user id; on failure: -1
+     */
+    public int verificationUserLoginData(String email, String password){
+        int id = -1;
+        try (Scanner scanner = new Scanner(new File(DIR + "user.csv"))){
+            scanner.nextLine(); //header
+            while (scanner.hasNextLine()) {
+                String[] line = scanner.nextLine().split(",");
+                if(line[3].equals(email) && line[4].equals(password)){
+                    id = Integer.parseInt(line[0]);
+                    break;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("verificationUserLoginData(): No such a file");
+            System.exit(-1);
+        }
+        return id;
+    }
 
 }
