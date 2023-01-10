@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-id,name,surname,email,password,phoneNumber,addressId,cartId,userSettingsId,isAdmin,orderHistory
-1,Mateusz,Wadowski,admin@example.com,niewiemcowpisac,+48647463746,1,1,1,1,1,2,3,4,5
-2,Piotr,Szkaradek,piotr.szkaradek@example.com,pojecianiemam,+48643792839,2,2,2,0,7,3,8,2,5
-3,Wiktoria,Krakowian,wiktoria.krakowian@example.com,jakiesdziwne,+48736392754,3,3,3,0,2,4,6,3,6
-=======
-id,name,surname,email,password,phoneNumber,role,orderHistory
->>>>>>> 0e1cb69f29169375f5f3ba28a8ac6fc7f8169b48
+id,name,surname,email,password,phoneNumber,isAdmin,orderHistory
+1,Mateusz,Wadowski,admin@example.com,niewiemcowpisac,+48647463746,1,1,2,3,4,5
+2,Piotr,Szkaradek,piotr.szkaradek@example.com,pojecianiemam,+48643792839,0,7,3,8,2,5
+3,Wiktoria,Krakowian,wiktoria.krakowian@example.com,jakiesdziwne,+48736392754,0,2,4,6,3,6
