@@ -174,7 +174,7 @@ public final class DatabaseConnector {
      */
     private String findFilePath(Convertible convertible){
         String fileName = findFile(convertible);
-        System.out.println("[findFile] filename:" + fileName);
+//        System.out.println("[findFile] filename:" + fileName);
 
         return (convertible instanceof Product)
                 ? findFilePathRecursive(fileName, DIR_PRODUCTS)
@@ -187,7 +187,7 @@ public final class DatabaseConnector {
      */
     private String findFilePath(Class convertible){
         String fileName = findFile(convertible);
-        System.out.println("[findFile] filename:" + fileName);
+//        System.out.println("[findFile] filename:" + fileName);
 
         return (convertible.equals(Product.class))
                 ? findFilePathRecursive(fileName, DIR_PRODUCTS)

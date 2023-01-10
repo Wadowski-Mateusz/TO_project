@@ -1,21 +1,19 @@
 package org.shop.classes;
 
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.shop.interfaces.Convertible;
 
-import javax.swing.text.StyledEditorKit;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.TreeMap;
 
 public class Product implements Convertible {
 
-
-
-
     volatile static private int freeId = -1;
     private int id;
-    private static String category;
+    private String category;
     private String name;
     private String mark;
     private float price;
@@ -45,11 +43,91 @@ public class Product implements Convertible {
 
     @Override
     public String convertToRecord() {
-        throw new UnsupportedOperationException("product.convertToRecord unsupported");
+
+        JSONObject record = new JSONObject();
+        record.put("id",this.id);
+        record.put("category", this.category);
+        record.put("name", this.name);
+        record.put("mark", this.mark);
+        record.put("price", this.price);
+        record.put("howManyStock", this.howManyStock);
+        record.put("visibility", this.visibility.toString());
+
+        ArrayList<Integer> tagId = new ArrayList<>();
+        this.tags.forEach((Tag t) ->
+                    tagId.add(t.getId()));
+        record.put("tags", tagId);
+
+//        ArrayList<String> suggestedId = new ArrayList<>();
+//        this.suggested.forEach((Product p) ->
+//                suggestedId.add(String.valueOf(p.getId()))
+//        );
+//        record.put("suggested", suggestedId);
+
+        ArrayList<String> characteristicsValues = new ArrayList<>(this.characteristics.values());
+        record.put("characteristics", characteristicsValues);
+
+        return record.toString();
     }
 
     public static Convertible convertFromRecord(int id){
-        throw new UnsupportedOperationException("product.convertFromRecord unsupported");
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        String record = db.loadFromFile(id, Product.class);
+        JSONObject json = new JSONObject(record);
+
+        JSONArray jsonArray = json.getJSONArray("characteristics");
+        ArrayList<String> characteristicsFromJSON = new ArrayList<>();
+        for(int i = 0; i < jsonArray.length(); i++)
+            characteristicsFromJSON.add((String) jsonArray.get(i));
+
+        String category = json.getString("category").split("/")[json.getString("category").split("/").length - 1];
+        Product p = null;
+
+        switch(category){
+            case "cpu":
+                p = ProductFactory.createCPU(json.getString("name"), json.getString("mark"),
+                        json.getFloat("price"),
+                        json.getInt("howManyStock"),
+                        Boolean.parseBoolean(json.getString("visibility")),
+                        characteristicsFromJSON);
+                break;
+            case "fridge":
+                p = ProductFactory.createFridge(json.getString("name"), json.getString("mark"),
+                        json.getFloat("price"),
+                        json.getInt("howManyStock"),
+                        Boolean.parseBoolean(json.getString("visibility")),
+                        characteristicsFromJSON);
+                break;
+            case "laptop":
+                p = ProductFactory.createLaptop(json.getString("name"), json.getString("mark"),
+                        json.getFloat("price"),
+                        json.getInt("howManyStock"),
+                        Boolean.parseBoolean(json.getString("visibility")),
+                        characteristicsFromJSON);
+                break;
+            case "microwave":
+                p = ProductFactory.createMicrowave(json.getString("name"), json.getString("mark"),
+                        json.getFloat("price"),
+                        json.getInt("howManyStock"),
+                        Boolean.parseBoolean(json.getString("visibility")),
+                        characteristicsFromJSON);
+                break;
+        }
+
+//        jsonArray = json.getJSONArray("suggested");
+//        ArrayList<Pr> suggestedFromJSON = new ArrayList<>();
+//        for(int i = 0; i < jsonArray.length(); i++)
+//            suggestedFromJSON.add((String) jsonArray.get(i)); //na przedmiot
+//        p.setSuggested(suggestedFromJSON);
+
+        jsonArray = json.getJSONArray("tags");
+        for(int i = 0; i < jsonArray.length(); i++) {
+            Tag tag = (Tag) Tag.convertFromRecord(
+                    (Integer) jsonArray.get(i));
+            p.addTag(tag);
+        }
+
+        return p;
     }
 
     public int getId() {
@@ -117,7 +195,7 @@ public class Product implements Convertible {
     }
 
     public void setCategory(String category) {
-        Product.category = category;
+        this.category = category;
     }
 
     public TreeMap<String, String> getCharacteristics() {
@@ -131,6 +209,11 @@ public class Product implements Convertible {
     public void addCharacteristic(String key, String value){
         this.characteristics.put(key, value);
     }
+
+    public void addTag(Tag tag){
+        this.tags.add(tag);
+    }
+
 
     @Override
     public boolean equals(Object o) {

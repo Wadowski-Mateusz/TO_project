@@ -88,8 +88,11 @@ public class Cart implements Convertible {
     }
 
     public Order createOrder(){
-        Order order = new Order(this.value, this.products);
+        Order order = new Order(this.value, new ArrayList<>(this.products));
         order.setShipping(new Shipping(order.getId(), (Address) Address.convertFromRecord(this.id)));
+        this.value = 0.0F;
+        this.products.clear();
+
         return order;
     }
 }
