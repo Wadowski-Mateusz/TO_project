@@ -272,26 +272,6 @@ public final class DatabaseConnector {
         }
     }
 
-
-    public static void main(String[] args){
-        System.out.println();
-        DatabaseConnector db = getInstance();
-
-        TreeMap<Integer, String> map = db.listProductsFromCategory("microwave");
-        if (map == null)
-            System.out.println("Problem; zła kategoria?");
-        map.forEach((k, v) -> System.out.println((k + " : " + v)));
-
-        System.out.println();
-
-        map = db.listAllProductsFromCategory("microwave");
-        if (map == null)
-            System.out.println("Problem; zła kategoria?");
-        map.forEach((k, v) -> System.out.println((k + " : " + v)));
-
-    }
-
-
     /**
      * example: listProductsFromCategory("microwave")
      * Returns map of products from given category, which are visible and in stock
