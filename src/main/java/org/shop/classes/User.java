@@ -58,9 +58,9 @@ public class User implements Convertible {
         this.email = data[i++];
         this.password = data[i++];
         this.phoneNumber = data[i++];
-        this.address = (Address) Address.convertFromRecord(Integer.parseInt(data[i++]));
-        this.cart = (Cart) Cart.convertFromRecord(Integer.parseInt(data[i++]));
-        this.settings = (UserSettings) UserSettings.convertFromRecord(Integer.parseInt(data[i++]));
+        this.address = (Address) Address.convertFromRecord(this.id);
+        this.cart = (Cart) Cart.convertFromRecord(this.id);
+        this.settings = (UserSettings) UserSettings.convertFromRecord(this.id);
         this.role = data[i++];
         this.orderHistory = new ArrayList<>();
         for(int j = i; j < data.length; j++)

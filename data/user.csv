@@ -1,1 +1,1 @@
-id,name,surname,email,password,phoneNumber,addressId,cartId,userSettingsId,role,orderHistory
+id,name,surname,email,password,phoneNumber,role,orderHistory
