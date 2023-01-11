@@ -5,49 +5,37 @@ import org.shop.interfaces.Convertible;
 import java.util.ArrayList;
 
 public class User implements Convertible {
-    public static final String STANDARD = "standard";
-    public static final String ADMIN = "admin";
 
-    volatile static private int freeId = -1;
-    private int id;
+    private final int id;
     private String name;
     private String surname;
     private String email;
     private String password;
     private String phoneNumber;
+    private boolean isAdmin;
     private Address address;
     private Cart cart;
     private UserSettings settings;
-    private String role;
     private ArrayList<Order> orderHistory;
 
+    public static UserBuilder getBuilder(){
+        return new UserBuilder();
+    }
 
-
-    public User(String password, String email){
-
-        this.name = "";
-        this.surname = "";
+    public User(int id, String name, String surname, String email, String password,
+                String phoneNumber, Address address, Cart cart,
+                UserSettings userSettings, Boolean isAdmin, ArrayList<Order> orderHistory){
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
         this.email = email;
         this.password = password;
-        this.phoneNumber = "";
-        this.address = new Address(this.id);
-        this.cart = new Cart(this.id);
-        this.settings = new UserSettings(this.id);
-        this.role = User.STANDARD;
-        this.orderHistory = new ArrayList<>();
-
-        DatabaseConnector dbc = DatabaseConnector.getInstance();
-        if(freeId < 0)
-            freeId = dbc.findFreeId(User.class);
-
-        this.id = freeId++;
-//
-//        if(!dbc.saveToFile(this)){
-//            System.out.println("Saving to file failed");
-//            this.id = -1;
-//            freeId -= 1;
-//        }
-
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.cart = cart;
+        this.settings = userSettings;
+        this.isAdmin = isAdmin;
+        this.orderHistory = orderHistory;
     }
 
     public User(String[] data){
@@ -61,12 +49,11 @@ public class User implements Convertible {
         this.address = (Address) Address.convertFromRecord(this.id);
         this.cart = (Cart) Cart.convertFromRecord(this.id);
         this.settings = (UserSettings) UserSettings.convertFromRecord(this.id);
-        this.role = data[i++];
+        this.isAdmin = Boolean.parseBoolean(data[i++]);
         this.orderHistory = new ArrayList<>();
         for(int j = i; j < data.length; j++)
             orderHistory.add((Order) Order.convertFromRecord(Integer.parseInt(data[j])));
     }
-
 
     public int getId() {
         return id;
@@ -136,12 +123,12 @@ public class User implements Convertible {
         this.settings = settings;
     }
 
-    public String getRole() {
-        return role;
+    public boolean getIsAdmin() {
+        return isAdmin;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRole(Boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     public ArrayList<Order> getOrderHistory() {
@@ -157,9 +144,7 @@ public class User implements Convertible {
         String record = this.id + ","
                 + this.name + "," + this.surname + ","
                 + this.email + "," + this.password + ","
-                + this.phoneNumber + "," + this.address.getId() + ","
-                + this.cart.getId() + "," + this.settings.getId() + ","
-                + this.role;
+                + this.phoneNumber + "," + this.isAdmin;
 
         for (Order o : orderHistory)
             record += ", " + o.getId();
