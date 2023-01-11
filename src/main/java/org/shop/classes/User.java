@@ -154,7 +154,7 @@ public class User implements Convertible {
 
     static public Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadFromFile(id, User.class);
+        String record = db.loadData(id, User.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");

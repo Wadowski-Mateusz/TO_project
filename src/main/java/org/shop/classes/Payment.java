@@ -56,7 +56,7 @@ public class Payment implements Convertible {
 
     static Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadFromFile(id, Payment.class);
+        String record = db.loadData(id, Payment.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");

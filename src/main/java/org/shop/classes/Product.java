@@ -72,7 +72,7 @@ public class Product implements Convertible {
 
     public static Convertible convertFromRecord(int id){
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadFromFile(id, Product.class);
+        String record = db.loadData(id, Product.class);
         JSONObject json = new JSONObject(record);
 
         JSONArray jsonArray = json.getJSONArray("characteristics");

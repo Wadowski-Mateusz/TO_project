@@ -79,7 +79,7 @@ public class Address implements Convertible {
 
     static public Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadFromFile(id, Address.class);
+        String record = db.loadData(id, Address.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");

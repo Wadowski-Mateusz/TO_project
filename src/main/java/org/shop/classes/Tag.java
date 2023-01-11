@@ -46,7 +46,7 @@ public class Tag implements Convertible {
 
     static Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadFromFile(id, Tag.class);
+        String record = db.loadData(id, Tag.class);
         if(record.isEmpty())
             System.exit(-1);
         String[] data = record.split(",");

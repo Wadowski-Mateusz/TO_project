@@ -58,7 +58,7 @@ public class Shipping implements Convertible {
 
     static Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadFromFile(id, Shipping.class);
+        String record = db.loadData(id, Shipping.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");

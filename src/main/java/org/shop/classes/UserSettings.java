@@ -48,7 +48,7 @@ public class UserSettings implements Convertible{
 
     static Convertible convertFromRecord(int id) {
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadFromFile(id, UserSettings.class);
+        String record = db.loadData(id, UserSettings.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");

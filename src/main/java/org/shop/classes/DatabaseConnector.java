@@ -2,7 +2,6 @@ package org.shop.classes;
 
 import org.shop.interfaces.Convertible;
 
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -83,30 +82,17 @@ public final class DatabaseConnector {
     }
 
     /**
-     * @param path path to directory it will look for max id
-     * @return max id from files in subdirectory
+     * @return success: free id for Product; failure: -1
      */
-    private int findIdRecursive(String path){
-        List<String> directories = listDirectories(path);
-
-        int maxId = -1;
-        if (directories.isEmpty()) {
-            List<String> files = listFiles(path);
-            for(String file : files){
-                int foundId = maxIdFile(path+file);
+    private int findFreeProductId(){
+        ArrayList<String> files  = listAllFilesFromDirectory(DatabaseConnector.DIR_PRODUCTS);
+        int maxId = -2;
+        for(String file : files){
+            int foundId = maxIdFile(file);
                 if (foundId > maxId)
                     maxId = foundId;
-            }
-            return maxId;
         }
-
-        for(String directory : directories){
-            int foundId = findIdRecursive(path + directory + "/");
-            if (foundId > maxId)
-                maxId = foundId;
-        }
-
-        return maxId;
+        return maxId + 1;
     }
 
     /**
@@ -117,54 +103,9 @@ public final class DatabaseConnector {
      */
     public int findFreeId(Class convertible){
         if (Product.class.equals(convertible))
-            return findIdRecursive(DIR_PRODUCTS) + 1;
+            return findFreeProductId();
 
-        String[] className = convertible.getName().split("\\.");
-        String path = DIR + className[className.length-1].toLowerCase() + ".csv";
-        return maxIdFile(path) + 1;
-    }
-
-    /**
-     * Returns savefile for convertible*/
-    public String findFile(Convertible convertible){
-        String[] classData = convertible.getClass().getName().split("\\.");
-        return classData[classData.length-1].toLowerCase() + ".csv";
-    }
-
-    /**
-     * Returns file for convertible.class*/
-    public String findFile(Class convertible){
-        String[] classData = convertible.getName().split("\\.");
-        return classData[classData.length-1].toLowerCase() + ".csv";
-    }
-
-    /**
-     * example: findFilePathRecursive("microwave.csv", DatabaseConnector.DIR_PRODUCTS)
-     * @param lookFor looks for file, example "microwave.csv"
-     * @param lookIn looks in this directory and subdirectories
-     * @return on success, path to file; on failure empty string
-     */
-    private String findFilePathRecursive(String lookFor, String lookIn){
-
-        String foundPath = "";
-
-        List<String> directories = listDirectories(lookIn);
-        if(directories.isEmpty()){
-            List<String> files = listFiles(lookIn);
-            if (files.contains(lookFor))
-                return lookIn + lookFor;
-            else
-                return "";
-        }
-
-        for(String directory : directories){
-            foundPath = findFilePathRecursive(lookFor, lookIn + directory + "/");
-            if(foundPath.contains(".csv"))
-                break;
-            else
-                foundPath = "";
-        }
-        return foundPath;
+        return maxIdFile(DIR + convertible.getSimpleName() + ".csv") + 1;
     }
 
     /**
@@ -172,27 +113,16 @@ public final class DatabaseConnector {
      * @return path to file for argument
      */
     private String findFilePath(Convertible convertible){
-        String fileName = findFile(convertible);
-//        System.out.println("[findFile] filename:" + fileName);
-
-        return (convertible instanceof Product)
-                ? findFilePathRecursive(fileName, DIR_PRODUCTS)
-                : DIR + fileName;
+        String fileName;
+        if(convertible instanceof Product){
+            fileName = ((Product) convertible).getCategory() + ".csv";
+            System.out.println(fileName);
+            return DIR_PRODUCTS + fileName;
+        } else{
+            fileName = convertible.getClass().getSimpleName().toLowerCase() + ".csv";
+            return DIR + fileName;
+        }
     }
-
-    /**
-     * @param convertible convertible.class with file in "date/*"
-     * @return path to file for argument
-     */
-    private String findFilePath(Class convertible){
-        String fileName = findFile(convertible);
-//        System.out.println("[findFile] filename:" + fileName);
-
-        return (convertible.equals(Product.class))
-                ? findFilePathRecursive(fileName, DIR_PRODUCTS)
-                : DIR + fileName;
-    }
-
 
     /**
      * @param convertible object to save to database
@@ -211,35 +141,78 @@ public final class DatabaseConnector {
         return true;
     }
 
+    /**
+     * @param lookIn directory to recursively find all .csv files
+     * @return success: all paths to .csv files in subdirectories; failure: empty list
+     */
+    private ArrayList<String> listAllFilesFromDirectory(String lookIn){
+        ArrayList<String> result = new ArrayList<>();
+
+        ArrayList<String> directories = (ArrayList<String>) listDirectories(lookIn);
+        if (directories.isEmpty()) {
+            result = (ArrayList<String>) listFiles(lookIn);
+            for (int i = 0; i < result.size(); i++)
+                result.set(i, lookIn + result.get(i));
+            return result;
+        }
+
+        for(String directory : directories)
+            result.addAll(listAllFilesFromDirectory(lookIn + directory + "/"));
+
+        return result;
+    }
 
     /**
+     * Looks for record with given id in file.
+     * @param id id of record to find
+     * @param path path to file with record
+     * @return on success: record in csv form; on failure: empty string
+     */
+    private String recordFromFile(int id, String path){
+        Scanner scanner;
+
+        try {
+            scanner = new Scanner(new File(path));
+        } catch (FileNotFoundException e) {
+            System.out.println("recordFromFile(): No such a file");
+            return "";
+        }
+
+        scanner.nextLine(); //header
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            int foundId = Integer.parseInt(line.split(",")[0]);
+            if(foundId == id) {
+                scanner.close();
+                return line;
+            }
+        }
+        scanner.close();
+        return "";
+    }
+
+    /**
+     * Load record of given id and given type.
+     * example: loadData(0, User.class)
      * @param id if of object method has to find
      * @param convertible instance of item we are looking for
      * @return string containing record from base; empty on failure
      */
-    public String loadFromFile(int id, Class convertible)  {
-        try {
-            String path = findFilePath(convertible);
-            Scanner scanner = new Scanner(new File(path));
-            scanner.nextLine(); //header
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                int foundId = Integer.parseInt(line.split(",")[0]);
-                if(foundId == id) {
-                    scanner.close();
-                    return line;
-                }
-            }
-            scanner.close();
-            return "";
-        } catch (FileNotFoundException e) {
-            System.out.println("loadFromFile(): No such a file");
-            return "";
+    public String loadData(int id, Class convertible)  {
+        if(!convertible.equals(Product.class))
+            return recordFromFile(id, DIR + convertible.getSimpleName().toLowerCase() + ".csv");
+
+        ArrayList<String> files = listAllFilesFromDirectory(DIR_PRODUCTS);
+        for(String file : files){
+            String record = recordFromFile(id, file);
+            if(!record.isEmpty())
+                return record;
         }
+
+        return ""; // TODO throw error
     }
 
-
-    /** Updates record in database.
+    /** Updates existing record in the database of given instance.
      * @param convertible object to update
      * @return on success returns true; on failure returns false
      */
@@ -280,8 +253,13 @@ public final class DatabaseConnector {
      * @return on success: map filled with ids and names; on failure: null
      */
     public TreeMap<Integer, String> listProductsFromCategory(String category){
+        String path = "";
+        for(String file : listAllFilesFromDirectory(DIR_PRODUCTS))
+            if(file.contains(category + ".csv")) {
+                path = file;
+                break;
+            }
         TreeMap<Integer, String> output = new TreeMap<>();
-        String path = findFilePathRecursive(category + ".csv", DatabaseConnector.DIR_PRODUCTS);
         try (Scanner scanner = new Scanner(new File(path))){
             scanner.nextLine(); //header
             while (scanner.hasNextLine()) {
@@ -296,7 +274,6 @@ public final class DatabaseConnector {
         return output;
     }
 
-
     /**
      * Only admin should be able to use it
      * example: listProductsFromCategory("microwave")
@@ -305,8 +282,13 @@ public final class DatabaseConnector {
      * @return on success: list filled with ids and names; on failure: null
      */
     public TreeMap<Integer, String> listAllProductsFromCategory(String category){
+        String path = "";
+        for(String file : listAllFilesFromDirectory(DIR_PRODUCTS))
+            if(file.contains(category + ".csv")) {
+                path = file;
+                break;
+            }
         TreeMap<Integer, String> output = new TreeMap<>();
-        String path = findFilePathRecursive(category + ".csv", DatabaseConnector.DIR_PRODUCTS);
         try (Scanner scanner = new Scanner(new File(path))){
             scanner.nextLine(); //header
             while (scanner.hasNextLine()) {
@@ -322,6 +304,7 @@ public final class DatabaseConnector {
 
     /**
      * Looks for user with given data in base
+     * example: verificationUserLoginData("aa.aa@aa.aa","password")
      * @param email user mail
      * @param password user password
      * @return on success: user id; on failure: -1
