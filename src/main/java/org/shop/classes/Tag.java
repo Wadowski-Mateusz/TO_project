@@ -52,4 +52,20 @@ public class Tag implements Convertible {
         String[] data = record.split(",");
         return new Tag(data);
     }
+
+    public void update(){
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        db.updateRecord(this);
+    }
+
+    public void updateObject(){
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        String record = db.loadData(id, Order.class);
+//        if(record.isEmpty())
+//            throw new //todo
+        String[] data = record.split(",");
+        this.name = data[1];
+
+    }
+
 }

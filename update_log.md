@@ -1,4 +1,30 @@
-## 12.01.2023 #1
+## 14.01.2023
+
+### Changes:
+
+- All classes implementing <i>Convertible</i>:
+  * update() - update object in database 
+  * updateObject() - update object with data from db
+
+- Product.java
+  * changed <i> suggested </i> type from <i> ArrayList<Product> </i> to <i>Map<Integer, String></i> (<i>Map<K, V> : [product_id, product_name]</i>)
+  * setHowManyStock(int < 1) -> visibility = false
+
+- Cart.java
+  * createOrder() saves order to database
+
+- Order.java
+  * deleted statuses
+  * if status of <i>Payment</i> or <i>Shipping</i> changed, <i>Status</i> is updated  
+
+- Shipping.java
+  * new status <i>"zwrocono"</i>
+
+- Payment.java
+  * renamed statuses to all caps
+
+
+## 12.01.2023
 
 ### Changes:
 - DatabaseConnector.java

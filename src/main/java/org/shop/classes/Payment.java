@@ -4,10 +4,10 @@ import org.shop.interfaces.Convertible;
 
 public class Payment implements Convertible {
 
-    public static final String status_payment_false = "Nieoplacone";
-    public static final String status_payment_true = "Oplacone";
+    public static final String STATUS_PAYMENT_FALSE = "Nieoplacone";
+    public static final String STATUS_PAYMENT_TRUE = "Oplacone";
     private final int id;
-    private final float value;
+    private float value;
     private String status;
 
     /**
@@ -17,7 +17,7 @@ public class Payment implements Convertible {
     public Payment(int id, float value){
         this.id = id;
         this.value = value;
-        this.status = status_payment_false;
+        this.status = STATUS_PAYMENT_FALSE;
 //        DatabaseConnector dbc = DatabaseConnector.getInstance();
 //        if(!dbc.saveToFile(this)){
 //            System.out.println("Failed save to file");
@@ -40,6 +40,10 @@ public class Payment implements Convertible {
 
     public void setStatus(String status) {
         this.status = status;
+        update();
+        Order order = (Order) Order.convertFromRecord(this.id);
+        order.setStatus(status);
+        order.update();
     }
 
     public float getValue() {
@@ -61,6 +65,22 @@ public class Payment implements Convertible {
             return null;
         String[] data = record.split(",");
         return new Payment(data);
+    }
+
+    public void update(){
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        db.updateRecord(this);
+    }
+
+    public void updateObject(){
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        String record = db.loadData(id, Order.class);
+//        if(record.isEmpty())
+//            throw new //todo
+        String[] data = record.split(",");
+        this.value = Float.parseFloat(data[1]);
+        this.status = data[2];
+
     }
 
 }

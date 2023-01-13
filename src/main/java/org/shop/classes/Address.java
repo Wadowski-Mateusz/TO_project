@@ -20,9 +20,9 @@ public class Address implements Convertible {
         this.voivodeships = "";
 
         DatabaseConnector dbc = DatabaseConnector.getInstance();
-        if(!dbc.saveToFile(this)){
+        if(!dbc.saveToFile(this))
             System.out.println("Saving to file failed");
-        }
+
     }
 
     public Address(int id, String street, String house, String zip, String city, String voivodeships) {
@@ -72,6 +72,11 @@ public class Address implements Convertible {
 
     public void setVoivodeships(String voivodeships) {this.voivodeships = voivodeships;}
 
+    public void update(){
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        db.updateRecord(this);
+    }
+
     @Override
     public String convertToRecord() {
         return id + "," + street + "," + house + "," + zip + "," + city + "," + voivodeships;
@@ -85,6 +90,20 @@ public class Address implements Convertible {
         String[] data = record.split(",");
 
         return new Address(data);
+    }
+
+    public void updateObject(){
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        String record = db.loadData(id, Order.class);
+//        if(record.isEmpty())
+//            throw new //todo
+        String[] data = record.split(",");
+        this.street = data[1];
+        this.house = data[2];
+        this.zip = data[3];
+        this.city = data[4];
+        this.voivodeships = data[5];
+
     }
 
 }

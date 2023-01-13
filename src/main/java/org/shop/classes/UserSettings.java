@@ -23,11 +23,6 @@ public class UserSettings implements Convertible{
     private UserSettings(String[] data){
         this.id = Integer.parseInt(data[0]);
         this.notificationAllow = Boolean.parseBoolean(data[1]);
-
-        DatabaseConnector dbc = DatabaseConnector.getInstance();
-        if(!dbc.saveToFile(this)){
-            System.out.println("Failed save to file");
-        }
     }
 
     public int getId() {
@@ -53,6 +48,21 @@ public class UserSettings implements Convertible{
             return null;
         String[] data = record.split(",");
         return new UserSettings(data);
+    }
+
+    public void update(){
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        db.updateRecord(this);
+    }
+
+    public void updateObject(){
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        String record = db.loadData(id, Order.class);
+//        if(record.isEmpty())
+//            throw new //todo
+        String[] data = record.split(",");
+        this.notificationAllow = Boolean.parseBoolean(data[1]);
+
     }
 
 }
