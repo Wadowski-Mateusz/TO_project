@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import org.shop.interfaces.Convertible;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 
@@ -17,11 +18,11 @@ public class Product implements Convertible {
     private String name;
     private String mark;
     private float price;
-    private int howManyStock;
-    private Boolean visibility;
+    private static int howManyStock;
+    private static Boolean visibility;
     private ArrayList<Tag> tags;
-    private ArrayList<Product> suggested;
-    private TreeMap<String, String> characteristics;
+    private Map<Integer, String> suggested;
+    private Map<String, String> characteristics;
 
     public Product(String name, String mark, float price, int howManyStock, Boolean visibility){
         this.name = name;
@@ -30,7 +31,7 @@ public class Product implements Convertible {
         this.howManyStock = howManyStock;
         this.visibility = visibility;
         this.tags = new ArrayList<>();
-        this.suggested = new ArrayList<>();
+        this.suggested = new TreeMap<>();
         this.characteristics = new TreeMap<>();
 
         if(freeId < 0) {
@@ -41,11 +42,32 @@ public class Product implements Convertible {
         this.id = freeId++;
     }
 
+
+    // TODO
+  public void generateSuggestedProducts(){
+        throw new UnsupportedOperationException();
+  }
+
+//    public static Product fastMicrowave(){
+//        ArrayList<String> a = new ArrayList<>();
+//        a.add("66W");
+//        a.add("5L");
+//        Product p = ProductFactory.createMicrowave("microvawe_fast", "mark_fast", 0.01F,
+//                123, true, a);
+//        DatabaseConnector db = DatabaseConnector.getInstance();
+//
+//        ArrayList<Tag> tags = new ArrayList<>();
+//        tags.add(((Tag) Tag.convertFromRecord(0)));
+//        tags.add(((Tag) Tag.convertFromRecord(1)));
+//        p.setTags(tags);
+//        return p;
+//    }
+
     @Override
     public String convertToRecord() {
 
         JSONObject record = new JSONObject();
-        record.put("id",this.id);
+        record.put("id", this.id);
         record.put("category", this.category);
         record.put("name", this.name);
         record.put("mark", this.mark);
@@ -53,16 +75,10 @@ public class Product implements Convertible {
         record.put("howManyStock", this.howManyStock);
         record.put("visibility", this.visibility.toString());
 
-        ArrayList<Integer> tagId = new ArrayList<>();
+        ArrayList<Integer> tagsId = new ArrayList<>();
         this.tags.forEach((Tag t) ->
-                    tagId.add(t.getId()));
-        record.put("tags", tagId);
-
-//        ArrayList<String> suggestedId = new ArrayList<>();
-//        this.suggested.forEach((Product p) ->
-//                suggestedId.add(String.valueOf(p.getId()))
-//        );
-//        record.put("suggested", suggestedId);
+                    tagsId.add(t.getId()));
+        record.put("tags", tagsId);
 
         ArrayList<String> characteristicsValues = new ArrayList<>(this.characteristics.values());
         record.put("characteristics", characteristicsValues);
@@ -71,18 +87,19 @@ public class Product implements Convertible {
     }
 
     public static Convertible convertFromRecord(int id){
+
         DatabaseConnector db = DatabaseConnector.getInstance();
         String record = db.loadData(id, Product.class);
-        JSONObject json = new JSONObject(record);
 
+        JSONObject json = new JSONObject(record);
         JSONArray jsonArray = json.getJSONArray("characteristics");
         ArrayList<String> characteristicsFromJSON = new ArrayList<>();
         for(int i = 0; i < jsonArray.length(); i++)
             characteristicsFromJSON.add((String) jsonArray.get(i));
 
         String category = json.getString("category").split("/")[json.getString("category").split("/").length - 1];
-        Product p = null;
 
+        Product p = null;
         switch(category){
             case "cpu":
                 p = ProductFactory.createCPU(json.getString("name"), json.getString("mark"),
@@ -114,18 +131,14 @@ public class Product implements Convertible {
                 break;
         }
 
-//        jsonArray = json.getJSONArray("suggested");
-//        ArrayList<Pr> suggestedFromJSON = new ArrayList<>();
-//        for(int i = 0; i < jsonArray.length(); i++)
-//            suggestedFromJSON.add((String) jsonArray.get(i)); //na przedmiot
-//        p.setSuggested(suggestedFromJSON);
-
         jsonArray = json.getJSONArray("tags");
         for(int i = 0; i < jsonArray.length(); i++) {
             Tag tag = (Tag) Tag.convertFromRecord(
                     (Integer) jsonArray.get(i));
             p.addTag(tag);
         }
+
+        // TODO suggested
 
         return p;
     }
@@ -150,11 +163,11 @@ public class Product implements Convertible {
         this.tags = tags;
     }
 
-    public ArrayList<Product> getSuggested() {
+    public Map<Integer, String> getSuggested() {
         return suggested;
     }
 
-    public void setSuggested(ArrayList<Product> suggested) {
+    public void setSuggested(Map<Integer, String> suggested) {
         this.suggested = suggested;
     }
 
@@ -164,6 +177,8 @@ public class Product implements Convertible {
 
     public void setHowManyStock(int howManyStock) {
         this.howManyStock = howManyStock;
+        if (this.getHowManyStock() < 1)
+            visibility = false;
     }
 
     public Boolean getVisibility() {
@@ -198,11 +213,11 @@ public class Product implements Convertible {
         this.category = category;
     }
 
-    public TreeMap<String, String> getCharacteristics() {
+    public Map<String, String> getCharacteristics() {
         return characteristics;
     }
 
-    public void setCharacteristics(TreeMap<String, String> characteristics) {
+    public void setCharacteristics(Map<String, String> characteristics) {
         this.characteristics = characteristics;
     }
 
@@ -226,6 +241,21 @@ public class Product implements Convertible {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public void update(){
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        db.updateRecord(this);
+    }
+
+    public void updateObject(){
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        String record = db.loadData(id, Order.class);
+//        if(record.isEmpty())
+//            throw new //todo
+        JSONObject json = new JSONObject(record);
+        this.howManyStock = json.getInt("howManyStock");
+        this.visibility = json.getBoolean("visibility");
     }
 
 }

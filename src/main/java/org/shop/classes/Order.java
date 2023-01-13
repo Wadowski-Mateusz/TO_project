@@ -11,11 +11,6 @@ import java.util.ArrayList;
  * */
 public class Order implements Convertible {
 
-    public static final String STATUS_FINALIZED = "Zrealizowano";
-    public static final String STATUS_PAYMENT_FALSE = "Nieoplacone";
-    public static final String STATUS_PAYMENT_TURE = "Oplacone";
-    public static final String STATUS_SHIPPED = "Wyslane";
-
     volatile static private int freeId = -1;
     private int id;
     private float value;
@@ -27,7 +22,7 @@ public class Order implements Convertible {
     public Order(float value, ArrayList<Product> products){
         this.value = value;
         this.products = products;
-        this.status = STATUS_PAYMENT_FALSE;
+        this.status = Payment.STATUS_PAYMENT_FALSE;
 
         DatabaseConnector dbc = DatabaseConnector.getInstance();
         if(freeId < 0)
@@ -91,6 +86,8 @@ public class Order implements Convertible {
 
     public void setStatus(String status) {
         this.status = status;
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        db.updateRecord(this);
     }
 
     @Override
@@ -113,4 +110,26 @@ public class Order implements Convertible {
         String[] data = record.split(",");
         return new Order(data);
     }
+
+    public void update(){
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        db.updateRecord(this);
+    }
+
+    public void updateObject(){
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        String record = db.loadData(id, Order.class);
+//        if(record.isEmpty())
+//            throw new //todo
+        String[] data = record.split(",");
+        this.value = Float.parseFloat(data[1]);
+        this.status = data[2];
+        this.shipping = (Shipping) Shipping.convertFromRecord(Integer.parseInt(data[3]));
+        this.payment = (Payment) Payment.convertFromRecord(Integer.parseInt(data[4]));
+        this.products = new ArrayList<>();
+        for(int i = 5; i < data.length; i++)
+            products.add((Product) Product.convertFromRecord(Integer.parseInt(data[i])));
+
+    }
+
 }

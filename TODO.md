@@ -1,16 +1,12 @@
-**Order**
-* cart.createOrder() ma je zapisywać do pliku
-
 **Product**
+* Zaimplementować sugerowanie produktów (na podstawie tagow)
 * Jak ma wyglądać sugerowanie produktów?
-* Jak je wczytywać do produktu przy ConvertFromRecord? Bo jeśli to ma być lista produktów,
-        to one też będą generować swoje sugerowane i mamy nieskończoną pętlę. Może same nazwy produktów?
+
+**Cart**
+* Kiedy użytkownik kończy sesje, updatować jego koszyk w bazie
 
 **EventNoticication**
 * Konwersja na i ze stringa
-
-**DatabaseConnector**
-* Korzystać z adaptera by przerabiać Producty json na csv (jeśli to wykonalne)
 
 **Tworzenie zamówienia** 
 * Jeśli user nie ma uzupełnionego adresu w bazie, to przed złożeniem zamówienia musi je uzupełnić.

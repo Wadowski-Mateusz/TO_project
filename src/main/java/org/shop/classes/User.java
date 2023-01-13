@@ -161,4 +161,32 @@ public class User implements Convertible {
         return new User(data);
     }
 
+    public void update(){
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        db.updateRecord(this);
+    }
+
+    public void updateObject(){
+        DatabaseConnector db = DatabaseConnector.getInstance();
+        String record = db.loadData(id, Order.class);
+//        if(record.isEmpty())
+//            throw new //todo
+        String[] data = record.split(",");
+
+        int i = 1;
+        this.name = data[i++];
+        this.surname = data[i++];
+        this.email = data[i++];
+        this.password = data[i++];
+        this.phoneNumber = data[i++];
+        this.address = (Address) Address.convertFromRecord(this.id);
+        this.cart = (Cart) Cart.convertFromRecord(this.id);
+        this.settings = (UserSettings) UserSettings.convertFromRecord(this.id);
+        this.isAdmin = Boolean.parseBoolean(data[i++]);
+        this.orderHistory = new ArrayList<>();
+        for(int j = i; j < data.length; j++)
+            orderHistory.add((Order) Order.convertFromRecord(Integer.parseInt(data[j])));
+
+    }
+
 }
