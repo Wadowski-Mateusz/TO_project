@@ -302,6 +302,24 @@ public final class DatabaseConnector {
         return output;
     }
 
+    public int listOfEmails(String email) {
+        boolean existsInDatabase = false;
+        try (Scanner scanner = new Scanner(new File(DIR + "user.csv"))) {
+            scanner.nextLine(); // header
+            while (scanner.hasNextLine()) {
+                String[] line = scanner.nextLine().split(",");
+                if (line[3].equals(email)) {
+                    existsInDatabase = true;
+                    break;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("verificationUserLoginData(): No such a file");
+            System.exit(-1);
+        }
+        return existsInDatabase;
+    }
+
     /**
      * Looks for user with given data in base
      * example: verificationUserLoginData("aa.aa@aa.aa","password")
