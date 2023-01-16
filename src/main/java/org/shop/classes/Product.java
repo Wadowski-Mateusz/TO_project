@@ -5,10 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.shop.interfaces.Convertible;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
-import java.util.TreeMap;
+import java.util.*;
 
 public class Product implements Convertible {
 
@@ -18,6 +15,7 @@ public class Product implements Convertible {
     private String name;
     private String mark;
     private float price;
+    private List<Observer> observers;
     private static int howManyStock;
     private static Boolean visibility;
     private ArrayList<Tag> tags;
@@ -33,6 +31,7 @@ public class Product implements Convertible {
         this.tags = new ArrayList<>();
         this.suggested = new TreeMap<>();
         this.characteristics = new TreeMap<>();
+        this.observers = new ArrayList<>();
 
         if(freeId < 0) {
             DatabaseConnector dbc = DatabaseConnector.getInstance();
@@ -41,6 +40,32 @@ public class Product implements Convertible {
 
         this.id = freeId++;
     }
+
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+        // TODO: Database with observers
+    }
+
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+        // TODO: Remove from database
+    }
+
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(name, price);
+        }
+    }
+
+    public void updateProductPrice(float newPrice) {
+        if (price > newPrice) {
+            this.price = newPrice;
+            // TODO: update price in database
+            notifyObservers();
+        }
+    }
+
+
 
 
     // TODO
@@ -257,5 +282,4 @@ public class Product implements Convertible {
         this.howManyStock = json.getInt("howManyStock");
         this.visibility = json.getBoolean("visibility");
     }
-
 }
