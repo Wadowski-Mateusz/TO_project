@@ -1,1 +1,4 @@
 id,addressId,status
+1,1,issuedForDelivery
+2,2,issuedForDelivery
+3,3,inPreparation
