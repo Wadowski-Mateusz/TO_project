@@ -302,7 +302,7 @@ public final class DatabaseConnector {
         return output;
     }
 
-    public int listOfEmails(String email) {
+    public boolean listOfEmails(String email) {
         boolean existsInDatabase = false;
         try (Scanner scanner = new Scanner(new File(DIR + "user.csv"))) {
             scanner.nextLine(); // header
