@@ -206,7 +206,7 @@ public final class DatabaseConnector {
         Scanner scanner;
 
         try {
-            scanner = new Scanner(new File(DIR + "user.csv")));
+            scanner = new Scanner(new File(DIR + "user.csv"));
         } catch (FileNotFoundException e) {
             System.out.println("recordFromUserByEmail(): No such a file");
             return "";
