@@ -312,7 +312,40 @@ public final class DatabaseConnector {
         return output;
     }
 
-    public boolean listOfEmails(String email) {
+    /**
+     * Looks for user with given data in the database and checks if the user is an admin
+     * example: isAdmin("aa.aa@aa.aa","password")
+     *
+     * @param email    user mail
+     * @param password user password
+     * @return on success: true; on failure: false
+     */
+    public boolean isUserAdmin(String email, String password) {
+        boolean isAdmin = false;
+        try (Scanner scanner = new Scanner(new File(DIR + "user.csv"))) {
+            scanner.nextLine(); // header
+            while (scanner.hasNextLine()) {
+                String[] line = scanner.nextLine().split(",");
+                if (line[6].equals("true")) {
+                    isAdmin = true;
+                    break;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("verificationUserLoginData(): No such a file");
+            System.exit(-1);
+        }
+        return isAdmin;
+    }
+
+    /**
+     * Looks for user with given data in the database and checks if there is a user with the given email
+     * example: isEmail("aa.aa@aa.aa","password")
+     *
+     * @param email    user mail
+     * @return on success: true; on failure: false
+     */
+    public boolean isEmail(String email) {
         boolean existsInDatabase = false;
         try (Scanner scanner = new Scanner(new File(DIR + "user.csv"))) {
             scanner.nextLine(); // header

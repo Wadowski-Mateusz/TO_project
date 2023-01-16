@@ -1,6 +1,6 @@
 id,name,surname,email,password,phoneNumber,isAdmin,orderHistory
-1,Mateusz,Wadowski,admin@example.com,niewiemcowpisac,+48647463746,1,1,2,3,4,5
-2,Piotr,Szkaradek,piotr.szkaradek@example.com,pojecianiemam,+48643792839,0,7,3,8,2,5
-3,Wiktoria,Krakowian,wiktoria.krakowian@example.com,jakiesdziwne,+48736392754,0,2,4,6,3,6
-4,test_name,test_surname,test@email.test,test_password,000111000,4,4,4,false
-5,test_name,test_surname,test@email.test,test_password,000111000,5,5,5,false
+1,Mateusz,Wadowski,admin@example.com,niewiemcowpisac,+48647463746,true,1,2,3,4,5
+2,Piotr,Szkaradek,piotr.szkaradek@example.com,pojecianiemam,+48643792839,false,7,3,8,2,5
+3,Wiktoria,Krakowian,wiktoria.krakowian@example.com,jakiesdziwne,+48736392754,false,2,4,6,3,6
+4,test_name,test_surname,test@email.test,test_password,000111000,false,4,4,4
+5,test_name,test_surname,test@email.test,test_password,000111000,false,5,5,5
