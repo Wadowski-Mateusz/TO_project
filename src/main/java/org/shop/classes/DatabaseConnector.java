@@ -11,14 +11,15 @@ import java.util.stream.Stream;
 /**
  * Responsible for adding and returning data from base.
  * Singleton.
- * */
+ */
 public final class DatabaseConnector {
 
     private static final String DIR = "data/";
     private static final String DIR_PRODUCTS = "data/products/";
     private static volatile DatabaseConnector instance;
 
-    private DatabaseConnector() {}
+    private DatabaseConnector() {
+    }
 
     public static DatabaseConnector getInstance() {
 
@@ -26,7 +27,7 @@ public final class DatabaseConnector {
         if (result != null)
             return result;
 
-        synchronized(DatabaseConnector.class) {
+        synchronized (DatabaseConnector.class) {
             if (instance == null)
                 instance = new DatabaseConnector();
             return instance;
@@ -36,6 +37,7 @@ public final class DatabaseConnector {
 
     /**
      * example: ListFiles("data/") returns list filled with names of files in "project_path/data/" directory
+     *
      * @param dir path to directory
      * @return list of files in given directory
      */
@@ -48,6 +50,7 @@ public final class DatabaseConnector {
 
     /**
      * example: ListDirectories("data/products/") returns list filled with names of directories in "project_path/data/product/" directory
+     *
      * @param dir path to directory
      * @return list of files in given directory
      */
@@ -62,7 +65,7 @@ public final class DatabaseConnector {
      * @param path path to file to retrieve id
      * @return max id from given file
      */
-    private int maxIdFile(String path){
+    private int maxIdFile(String path) {
         try {
             File file = new File(path);
             String line = "";
@@ -73,9 +76,9 @@ public final class DatabaseConnector {
             myReader.close();
             String[] data = line.split(",");
 
-            return (data[0].equals("id")) ?  -1 : Integer.parseInt(data[0]);
+            return (data[0].equals("id")) ? -1 : Integer.parseInt(data[0]);
 
-        } catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             System.out.println("No such a file:\t" + path);
             return -2;
         }
@@ -84,13 +87,13 @@ public final class DatabaseConnector {
     /**
      * @return success: free id for Product; failure: -1
      */
-    private int findFreeProductId(){
-        ArrayList<String> files  = listAllFilesFromDirectory(DatabaseConnector.DIR_PRODUCTS);
+    private int findFreeProductId() {
+        ArrayList<String> files = listAllFilesFromDirectory(DatabaseConnector.DIR_PRODUCTS);
         int maxId = -2;
-        for(String file : files){
+        for (String file : files) {
             int foundId = maxIdFile(file);
-                if (foundId > maxId)
-                    maxId = foundId;
+            if (foundId > maxId)
+                maxId = foundId;
         }
         return maxId + 1;
     }
@@ -98,10 +101,11 @@ public final class DatabaseConnector {
     /**
      * example: findFreeID(Address.class)
      * example: findFreeID(Product.class) - for every class extending Product
+     *
      * @param convertible object which id have to be found
      * @return first free id for given class
      */
-    public int findFreeId(Class convertible){
+    public int findFreeId(Class convertible) {
         if (Product.class.equals(convertible))
             return findFreeProductId();
 
@@ -112,13 +116,13 @@ public final class DatabaseConnector {
      * @param convertible object convertible with file in "date/*"
      * @return path to file for argument
      */
-    private String findFilePath(Convertible convertible){
+    private String findFilePath(Convertible convertible) {
         String fileName;
-        if(convertible instanceof Product){
+        if (convertible instanceof Product) {
             fileName = ((Product) convertible).getCategory() + ".csv";
             System.out.println(fileName);
             return DIR_PRODUCTS + fileName;
-        } else{
+        } else {
             fileName = convertible.getClass().getSimpleName().toLowerCase() + ".csv";
             return DIR + fileName;
         }
@@ -128,14 +132,14 @@ public final class DatabaseConnector {
      * @param convertible object to save to database
      * @return on success returns true; on failure returns false
      */
-    public boolean saveToFile(Convertible convertible){
+    public boolean saveToFile(Convertible convertible) {
         String path = findFilePath(convertible);
 //        System.out.println("Path:" + path + "\tData: " + convertible.convertToRecord());
         try {
             Writer output = new BufferedWriter(new FileWriter(path, true));
             output.append(System.lineSeparator()).append(convertible.convertToRecord());
             output.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             return false;
         }
         return true;
@@ -145,7 +149,7 @@ public final class DatabaseConnector {
      * @param lookIn directory to recursively find all .csv files
      * @return success: all paths to .csv files in subdirectories; failure: empty list
      */
-    private ArrayList<String> listAllFilesFromDirectory(String lookIn){
+    private ArrayList<String> listAllFilesFromDirectory(String lookIn) {
         ArrayList<String> result = new ArrayList<>();
 
         ArrayList<String> directories = (ArrayList<String>) listDirectories(lookIn);
@@ -156,7 +160,7 @@ public final class DatabaseConnector {
             return result;
         }
 
-        for(String directory : directories)
+        for (String directory : directories)
             result.addAll(listAllFilesFromDirectory(lookIn + directory + "/"));
 
         return result;
@@ -164,11 +168,12 @@ public final class DatabaseConnector {
 
     /**
      * Looks for record with given id in file.
-     * @param id id of record to find
+     *
+     * @param id   id of record to find
      * @param path path to file with record
      * @return on success: record in csv form; on failure: empty string
      */
-    private String recordFromFile(int id, String path){
+    private String recordFromFile(int id, String path) {
         Scanner scanner;
 
         try {
@@ -182,7 +187,7 @@ public final class DatabaseConnector {
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             int foundId = Integer.parseInt(line.split(",")[0]);
-            if(foundId == id) {
+            if (foundId == id) {
                 scanner.close();
                 return line;
             }
@@ -194,29 +199,32 @@ public final class DatabaseConnector {
     /**
      * Load record of given id and given type.
      * example: loadData(0, User.class)
-     * @param id if of object method has to find
+     *
+     * @param id          if of object method has to find
      * @param convertible instance of item we are looking for
      * @return string containing record from base; empty on failure
      */
-    public String loadData(int id, Class convertible)  {
-        if(!convertible.equals(Product.class))
+    public String loadData(int id, Class convertible) {
+        if (!convertible.equals(Product.class))
             return recordFromFile(id, DIR + convertible.getSimpleName().toLowerCase() + ".csv");
 
         ArrayList<String> files = listAllFilesFromDirectory(DIR_PRODUCTS);
-        for(String file : files){
+        for (String file : files) {
             String record = recordFromFile(id, file);
-            if(!record.isEmpty())
+            if (!record.isEmpty())
                 return record;
         }
 
         return ""; // TODO throw error
     }
 
-    /** Updates existing record in the database of given instance.
+    /**
+     * Updates existing record in the database of given instance.
+     *
      * @param convertible object to update
      * @return on success returns true; on failure returns false
      */
-    public boolean updateRecord(Convertible convertible){
+    public boolean updateRecord(Convertible convertible) {
         try {
             String path = findFilePath(convertible);
             BufferedReader file = new BufferedReader(new FileReader(path));
@@ -225,7 +233,7 @@ public final class DatabaseConnector {
             int id = Integer.parseInt(convertible.convertToRecord().split(",")[0]);
             while ((line = file.readLine()) != null) {
 //                System.out.println(line);
-                if(Integer.parseInt(line.split(",")[0]) == id) {
+                if (Integer.parseInt(line.split(",")[0]) == id) {
                     line = convertible.convertToRecord();
                     inputBuffer.append(line).append('\n');
                     break;
@@ -249,22 +257,23 @@ public final class DatabaseConnector {
     /**
      * example: listProductsFromCategory("microwave")
      * Returns map of products from given category, which are visible and in stock
+     *
      * @param category category of product ex. "microwave"
      * @return on success: map filled with ids and names; on failure: null
      */
-    public TreeMap<Integer, String> listProductsFromCategory(String category){
+    public TreeMap<Integer, String> listProductsFromCategory(String category) {
         String path = "";
-        for(String file : listAllFilesFromDirectory(DIR_PRODUCTS))
-            if(file.contains(category + ".csv")) {
+        for (String file : listAllFilesFromDirectory(DIR_PRODUCTS))
+            if (file.contains(category + ".csv")) {
                 path = file;
                 break;
             }
         TreeMap<Integer, String> output = new TreeMap<>();
-        try (Scanner scanner = new Scanner(new File(path))){
+        try (Scanner scanner = new Scanner(new File(path))) {
             scanner.nextLine(); //header
             while (scanner.hasNextLine()) {
                 String[] line = scanner.nextLine().split(",");
-                if(Boolean.parseBoolean(line[6]) && Integer.parseInt(line[5]) > 0 )
+                if (Boolean.parseBoolean(line[6]) && Integer.parseInt(line[5]) > 0)
                     output.put(Integer.valueOf(line[0]), line[2]);
             }
         } catch (FileNotFoundException e) {
@@ -278,18 +287,19 @@ public final class DatabaseConnector {
      * Only admin should be able to use it
      * example: listProductsFromCategory("microwave")
      * Returns list of all products from given category
+     *
      * @param category category of product ex. "microwave"
      * @return on success: list filled with ids and names; on failure: null
      */
-    public TreeMap<Integer, String> listAllProductsFromCategory(String category){
+    public TreeMap<Integer, String> listAllProductsFromCategory(String category) {
         String path = "";
-        for(String file : listAllFilesFromDirectory(DIR_PRODUCTS))
-            if(file.contains(category + ".csv")) {
+        for (String file : listAllFilesFromDirectory(DIR_PRODUCTS))
+            if (file.contains(category + ".csv")) {
                 path = file;
                 break;
             }
         TreeMap<Integer, String> output = new TreeMap<>();
-        try (Scanner scanner = new Scanner(new File(path))){
+        try (Scanner scanner = new Scanner(new File(path))) {
             scanner.nextLine(); //header
             while (scanner.hasNextLine()) {
                 String[] line = scanner.nextLine().split(",");
@@ -323,17 +333,18 @@ public final class DatabaseConnector {
     /**
      * Looks for user with given data in base
      * example: verificationUserLoginData("aa.aa@aa.aa","password")
-     * @param email user mail
+     *
+     * @param email    user mail
      * @param password user password
      * @return on success: user id; on failure: -1
      */
-    public int verificationUserLoginData(String email, String password){
+    public int verificationUserLoginData(String email, String password) {
         int id = -1;
-        try (Scanner scanner = new Scanner(new File(DIR + "user.csv"))){
+        try (Scanner scanner = new Scanner(new File(DIR + "user.csv"))) {
             scanner.nextLine(); //header
             while (scanner.hasNextLine()) {
                 String[] line = scanner.nextLine().split(",");
-                if(line[3].equals(email) && line[4].equals(password)){
+                if (line[3].equals(email) && line[4].equals(password)) {
                     id = Integer.parseInt(line[0]);
                     break;
                 }
