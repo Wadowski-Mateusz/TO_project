@@ -197,6 +197,35 @@ public final class DatabaseConnector {
     }
 
     /**
+     * Looks for record with given email in file User.csv.
+     *
+     * @param email   email of record to find
+     * @return on success: record in csv form; on failure: empty string
+     */
+    private String recordFromUserByEmail(String email) {
+        Scanner scanner;
+
+        try {
+            scanner = new Scanner(new File(DIR + "user.csv")));
+        } catch (FileNotFoundException e) {
+            System.out.println("recordFromUserByEmail(): No such a file");
+            return "";
+        }
+
+        scanner.nextLine(); // header
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            String foundEmail = line.split(",")[3];
+            if (foundEmail.equals(email)) {
+                scanner.close();
+                return line;
+            }
+        }
+        scanner.close();
+        return "";
+    }
+
+    /**
      * Load record of given id and given type.
      * example: loadData(0, User.class)
      *
