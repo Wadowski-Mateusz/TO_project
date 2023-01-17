@@ -39,6 +39,14 @@ public class Address implements Convertible {
         }
     }
 
+    public Address(String street, String house, String zip, String city, String voivodeships) {
+        this.street = street;
+        this.house = house;
+        this.zip = zip;
+        this.city = city;
+        this.voivodeships = voivodeships;
+    }
+
     private Address(String[] data){
         if(data.length != 6)
             throw new IllegalArgumentException("Bad number of parameters\n");
@@ -51,6 +59,8 @@ public class Address implements Convertible {
     }
 
     public int getId() {return id;}
+
+    public void setId(int id) { this.id = id;}
 
     public String getStreet() {return street;}
 

@@ -46,7 +46,7 @@ public class UserBuilder {
         return this;
     }
 
-    public UserBuilder setPhoneNUmber(String phoneNumber){
+    public UserBuilder setPhoneNumber(String phoneNumber){
         this.phoneNumber = phoneNumber;
         return this;
     }
@@ -71,6 +71,9 @@ public class UserBuilder {
         if(cart == null) cart = new Cart(id);
         if(settings == null) settings = new UserSettings(id);
         if(orderHistory == null) orderHistory = new ArrayList<>();
+
+        this.address.setId(this.id);
+        dbc.saveToFile(this.address);
 
         User u = new User(id, name, surname, email, password, phoneNumber,
                 address, cart, settings, isAdmin, orderHistory);
