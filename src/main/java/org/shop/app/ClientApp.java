@@ -28,7 +28,7 @@ public class ClientApp {
                 if (buf != null)
                     System.out.println("Server respond: " + buf);
                 String t;
-                if(logged == false){
+                if(!logged){
                     switch(readerInput) {
                         //logowanie
                         case "login":
@@ -47,6 +47,61 @@ public class ClientApp {
                             }
                             break;
                         case "register":
+                            //email
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //haslo
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //powtorz haslo
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //imie
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //nazwisko
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //numer telefonu
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //ulica
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //nr domu
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //kod pocztowy
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //miasto
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //wojewodztwo
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
                             break;
                         case "login debug":
                             logged = true;

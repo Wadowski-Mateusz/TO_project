@@ -1,6 +1,9 @@
 package org.shop.app;
 
+import org.shop.classes.Address;
 import org.shop.classes.DatabaseConnector;
+import org.shop.classes.User;
+import org.shop.classes.UserBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,7 +32,7 @@ public class ServerAppThread extends Thread {
         final DatabaseConnector dbc = DatabaseConnector.getInstance();
         try {
             boolean logged = false;
-
+            String email, password, password2, name, surname, phoneNumber, street, house, zip, city, voivodeship;
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintStream printStream = new PrintStream(socket.getOutputStream());
             String message;
@@ -45,10 +48,10 @@ public class ServerAppThread extends Thread {
                     switch(message){
                         case "login":
                             printStream.println("Podaj email");
-                            String mail = bufferedReader.readLine();
+                            email = bufferedReader.readLine();
                             printStream.println("Podaj haslo");
-                            String password = bufferedReader.readLine();
-                            int l = dbc.verificationUserLoginData(mail, password);
+                            password = bufferedReader.readLine();
+                            int l = dbc.verificationUserLoginData(email, password);
                             if(l == -1){
                                 printStream.println("Bledny email lub haslo!");
                             }
@@ -60,6 +63,31 @@ public class ServerAppThread extends Thread {
 
                         //rejestracja konta
                         case "register":
+                            printStream.println("Podaj email");
+                            email = bufferedReader.readLine();
+                            printStream.println("Podaj haslo");
+                            password = bufferedReader.readLine();
+                            printStream.println("Powtorz haslo");
+                            password2 = bufferedReader.readLine();
+                            printStream.println("Podaj imie");
+                            name = bufferedReader.readLine();
+                            printStream.println("Podaj nazwisko");
+                            surname = bufferedReader.readLine();
+                            printStream.println("Podaj numer telefonu");
+                            phoneNumber = bufferedReader.readLine();
+                            printStream.println("Podaj Ulice/miejscowosc");
+                            street = bufferedReader.readLine();
+                            printStream.println("Podaj nr numer domu");
+                            house = bufferedReader.readLine();
+                            printStream.println("Podaj kod pocztowy");
+                            zip = bufferedReader.readLine();
+                            printStream.println("Podaj miasto");
+                            city = bufferedReader.readLine();
+                            printStream.println("Podaj wojewodztwo");
+                            voivodeship = bufferedReader.readLine();
+                            Address address = new Address(street, house, zip, city, voivodeship);
+                            UserBuilder builder = User.getBuilder();
+                            User u = builder.setEmail(email).setPassword(password).setName(name).setSurname(surname).setPhoneNumber(phoneNumber).setAddress(address).build();
                             break;
 
                         case "login debug":
