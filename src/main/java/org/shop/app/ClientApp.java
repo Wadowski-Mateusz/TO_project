@@ -6,8 +6,6 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.shop.classes.Menu;
-
 public class ClientApp {
     final static int PORT = 7777;
     final static String HOSTNAME = "localhost";
@@ -15,7 +13,6 @@ public class ClientApp {
     public static void main(String[] args) throws IOException {
         try {
             boolean logged = false;
-            Menu menu = new Menu();
             Socket socket = new Socket(HOSTNAME, PORT);
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader clientInput = new BufferedReader(new InputStreamReader(System.in));
