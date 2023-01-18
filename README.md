@@ -10,7 +10,7 @@
     Wzorce projektowe:
         a) kreacyjne
             1) singleton - kontakt/łącze z bazą danych lub/i configi użytkowników +
-            2) metoda wytwórcza - dodawanie produktów na stronę (przykładowo dodanie mikrofali wraz ze specyfikacją jako agd_kuchnia) i/lub sposób dostawy
+            2) metoda wytwórcza - dodawanie produktów na stronę (przykładowo dodanie mikrofali wraz ze specyfikacją jako agd_kuchnia) i/lub sposób dostawy +
             3) budowniczy - zbudowanie koszyka z zamówieniem +
 
         b) strukturalne
