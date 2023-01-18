@@ -1,9 +1,6 @@
 package org.shop.app;
 
-import org.shop.classes.Address;
-import org.shop.classes.DatabaseConnector;
-import org.shop.classes.User;
-import org.shop.classes.UserBuilder;
+import org.shop.classes.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,17 +15,19 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
- * Single thread for user. Every user has their own thread with their own socket to use.*/
+ * Single thread for user. Every user has their own thread with their own socket to use.
+ */
 public class ServerAppThread extends Thread {
     private final Socket socket;
 
-    public ServerAppThread(Socket socket){
+    public ServerAppThread(Socket socket) {
         this.socket = socket;
     }
 
     /**
-     * Thread main() */
-    public void run(){
+     * Thread main()
+     */
+    public void run() {
         final DatabaseConnector dbc = DatabaseConnector.getInstance();
         try {
             boolean logged = false;
@@ -37,27 +36,27 @@ public class ServerAppThread extends Thread {
             PrintStream printStream = new PrintStream(socket.getOutputStream());
             String message;
 
-            while ((message  = bufferedReader.readLine()) != null){
-                if(message.isEmpty()) {
+            while ((message = bufferedReader.readLine()) != null) {
+                if (message.isEmpty()) {
                     System.out.println("Thread end.");
                     break;
                 }
                 System.out.println("Received: " + message);
                 printStream.println("[Thread] received");
-                if(!logged){
-                    switch(message){
+                if (!logged) {
+                    switch (message) {
                         case "login":
                             printStream.println("Podaj email");
                             email = bufferedReader.readLine();
                             printStream.println("Podaj haslo");
                             password = bufferedReader.readLine();
-                            int l = dbc.verificationUserLoginData(email, password);
-                            if(l == -1){
-                                printStream.println("Bledny email lub haslo!");
-                            }
-                            else{
+                            User user = new User(email, password);
+                            UserChecker checker = new RegisteredUserChecker(null);
+                            if (checker.check(user)) {
                                 printStream.println("Pomyslne logowanie!");
                                 logged = true;
+                            } else {
+                                printStream.println("Bledny email lub haslo!");
                             }
                             break;
 
@@ -99,8 +98,7 @@ public class ServerAppThread extends Thread {
                             break;
 
                     }
-                }
-                else if (logged){
+                } else if (logged) {
                     switch (message) {
                         // wyswietlenie kategorii produktow
                         case "show categories":
@@ -162,7 +160,7 @@ public class ServerAppThread extends Thread {
                 }
             }
             socket.close();
-        } catch (SocketException e){
+        } catch (SocketException e) {
             System.out.println("Client disconnected");
 
         } catch (IOException e) {
@@ -170,8 +168,6 @@ public class ServerAppThread extends Thread {
         }
 
     }
-
-
 
 
 }

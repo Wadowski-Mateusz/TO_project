@@ -37,6 +37,12 @@ public class User implements Convertible {
         this.orderHistory = orderHistory;
     }
 
+    public User(String email, String password) {
+        this.id = 0;
+        this.email = email;
+        this.password = password;
+    }
+
     public User(String[] data){
         int i = 0;
         this.id = Integer.parseInt(data[i++]);
