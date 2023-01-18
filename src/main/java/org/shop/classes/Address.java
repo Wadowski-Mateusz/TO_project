@@ -67,23 +67,23 @@ public class Address implements Convertible {
 
     public String getStreet() {return street;}
 
-    public void setStreet(String street) {this.street = street;}
+    public void setStreet(String street) {this.street = street; updateInBase();}
 
     public String getHouse() {return house;}
 
-    public void setHouse(String house) {this.house = house;}
+    public void setHouse(String house) {this.house = house; updateInBase();}
 
     public String getZip() {return zip;}
 
-    public void setZip(String zip) {this.zip = zip;}
+    public void setZip(String zip) {this.zip = zip; updateInBase();}
 
     public String getCity() {return city;}
 
-    public void setCity(String city) {this.city = city;}
+    public void setCity(String city) {this.city = city; updateInBase();}
 
     public String getVoivodeships() {return voivodeships;}
 
-    public void setVoivodeships(String voivodeships) {this.voivodeships = voivodeships;}
+    public void setVoivodeships(String voivodeships) {this.voivodeships = voivodeships; updateInBase();}
 
 
     @Override
@@ -94,21 +94,20 @@ public class Address implements Convertible {
     }
 
     static public Convertible convertFromRecord(int id) {
-        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
+        DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
         String record = (String) dbcAdapter.loadData(id, Address.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");
-        return (data != null) ? new Address(data) : null;
+        return new Address(data);
     }
 
     public void updateInBase(){
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        db.updateRecord(this);
+        DatabaseConnector.getInstance().updateRecord(this);
     }
 
     public void updateObject(){
-        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
+        DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
         String record = (String) dbcAdapter.loadData(id, Address.class);
         String[] data = record.split(",");
         this.street = data[1];

@@ -55,6 +55,7 @@ public class Cart implements Convertible {
         this.products = products;
         this.value = 0;
         products.forEach((Product p) -> this.value += p.getPrice());
+        updateInBase();
     }
 
     @Override
