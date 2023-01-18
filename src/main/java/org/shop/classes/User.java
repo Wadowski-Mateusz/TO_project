@@ -69,6 +69,7 @@ public class User implements Convertible {
 
     public void setName(String name) {
         this.name = name;
+        updateInBase();
     }
 
     public String getSurname() {
@@ -77,6 +78,7 @@ public class User implements Convertible {
 
     public void setSurname(String surname) {
         this.surname = surname;
+        updateInBase();
     }
 
     public String getEmail() {
@@ -85,6 +87,7 @@ public class User implements Convertible {
 
     public void setEmail(String email) {
         this.email = email;
+        updateInBase();
     }
 
     public String getPassword() {
@@ -93,6 +96,7 @@ public class User implements Convertible {
 
     public void setPassword(String password) {
         this.password = password;
+        updateInBase();
     }
 
     public String getPhoneNumber() {
@@ -101,6 +105,7 @@ public class User implements Convertible {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        updateInBase();
     }
 
     public Address getAddress() {
@@ -109,6 +114,7 @@ public class User implements Convertible {
 
     public void setAddress(Address address) {
         this.address = address;
+        updateInBase();
     }
 
     public Cart getCart() {
@@ -117,6 +123,7 @@ public class User implements Convertible {
 
     public void setCart(Cart cart) {
         this.cart = cart;
+        updateInBase();
     }
 
     public boolean getIsAdmin() {
@@ -125,6 +132,7 @@ public class User implements Convertible {
 
     public void setRole(Boolean isAdmin) {
         this.isAdmin = isAdmin;
+        updateInBase();
     }
 
     public ArrayList<Order> getOrderHistory() {
@@ -133,6 +141,7 @@ public class User implements Convertible {
 
     public void setOrderHistory(ArrayList<Order> orderHistory) {
         this.orderHistory = orderHistory;
+        updateInBase();
     }
 
     @Override

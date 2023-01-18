@@ -62,12 +62,12 @@ public class Shipping implements Convertible {
     }
 
     static Convertible convertFromRecord(int id) {
-        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
+        DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
         String record = (String) dbcAdapter.loadData(id, Shipping.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");
-        return (data != null) ? new Shipping(data) : null;
+        return new Shipping(data);
     }
 
     public void updateInBase(){
@@ -76,7 +76,7 @@ public class Shipping implements Convertible {
     }
 
     public void updateObject(){
-        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
+        DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
         String record = (String) dbcAdapter.loadData(id, Shipping.class);
         String[] data = record.split(",");
         this.address = (Address) Address.convertFromRecord(Integer.parseInt(data[1]));

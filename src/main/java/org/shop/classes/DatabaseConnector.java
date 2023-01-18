@@ -312,7 +312,7 @@ public final class DatabaseConnector {
             scanner.nextLine(); //header
             while (scanner.hasNextLine()) {
                 String[] line = scanner.nextLine().split(",");
-                if (Integer.parseInt(line[5]) > 0)
+                if (Integer.parseInt(line[6]) > 0)
                     output.put(Integer.valueOf(line[0]), line[2]);
             }
         } catch (FileNotFoundException e) {

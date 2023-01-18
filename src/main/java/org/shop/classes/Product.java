@@ -188,6 +188,7 @@ public class Product implements Convertible {
 
     public void setHowManyStock(int howManyStock) {
         this.howManyStock = howManyStock;
+        updateInBase();
     }
 
     public String getMark() {
@@ -196,6 +197,7 @@ public class Product implements Convertible {
 
     public void setMark(String mark) {
         this.mark = mark;
+        updateInBase();
     }
 
     public String getName() {
@@ -204,6 +206,7 @@ public class Product implements Convertible {
 
     public void setName(String name) {
         this.name = name;
+        updateInBase();
     }
 
     public String getCategory() {
@@ -220,6 +223,7 @@ public class Product implements Convertible {
 
     public void setCharacteristics(Map<String, String> characteristics) {
         this.characteristics = characteristics;
+        updateInBase();
     }
 
     public void addCharacteristic(String key, String value){
