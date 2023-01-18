@@ -32,7 +32,7 @@ public class ServerAppThread extends Thread {
         try {
             boolean logged = false;
             boolean isAdmin = false;
-            String email, password, password2, name, surname, phoneNumber, street, house, zip, city, voivodeship, id;
+            String email, password, password2, name, surname, phoneNumber, street, house, zip, city, voivodeship, id, buf;
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintStream printStream = new PrintStream(socket.getOutputStream());
             String message;
@@ -56,6 +56,8 @@ public class ServerAppThread extends Thread {
                             if (checker.check(user)) {
                                 printStream.println("Pomyslne logowanie!");
                                 logged = true;
+                                CartBuilder cartBuilder = Cart.getBuilder();
+
                                 UserChecker adminChecker = new RoleChecker(null);
                                 if (adminChecker.check(user)) {
                                     printStream.println("Jestes adminem.");
@@ -157,6 +159,15 @@ public class ServerAppThread extends Thread {
                         case "show product":
                             printStream.println("Podaj id");
                             id = bufferedReader.readLine();
+                            Product p = (Product) Product.convertFromRecord(Integer.parseInt(id));
+                            Map<String, String> characteristics = p.getCharacteristics();
+                            String mapAsString = characteristics.keySet().stream().map(key -> key + ": " + characteristics.get(key)).collect(Collectors.joining(", ", "{", "}"));
+                            printStream.println(p.getName() + " (" + p.getCategory() + "); Znak: " + p.getMark() + "; Cena: " + p.getPrice() + "; Cechy: " + mapAsString);
+                            printStream.println("Dodac do koszyka?");
+                            buf = bufferedReader.readLine();
+                            if(buf == "y"){
+                                break;
+                            }
                             break;
 
                         //wyswietlenie koszyka
