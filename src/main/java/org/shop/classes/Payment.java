@@ -51,7 +51,6 @@ public class Payment implements Convertible {
         return value;
     }
 
-    // TODO - musi updatować zamówienie
     void pay(){
         throw new UnsupportedOperationException();
     }

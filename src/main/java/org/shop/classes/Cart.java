@@ -96,7 +96,7 @@ public class Cart implements Convertible {
             if (p.getHowManyStock() > 0)
                 p.setHowManyStock(p.getHowManyStock() - 1);
             else
-                throw new UnsupportedOperationException(); // TODO przedmiotu juz nie ma na stanie
+                throw new UnsupportedOperationException();
 
 
         Order order = new Order(this.value, new ArrayList<>(this.products));

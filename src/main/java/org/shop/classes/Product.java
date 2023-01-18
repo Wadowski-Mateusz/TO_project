@@ -52,12 +52,10 @@ public class Product implements Convertible {
 
     public void registerObserver(Observer observer) {
         observers.add(observer);
-        // TODO: Database with observers
     }
 
     public void removeObserver(Observer observer) {
         observers.remove(observer);
-        // TODO: Remove from database
     }
 
     public void notifyObservers() {
