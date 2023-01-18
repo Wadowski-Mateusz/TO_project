@@ -1,6 +1,7 @@
 package org.shop.classes;
 
 import org.shop.interfaces.Convertible;
+import org.shop.interfaces.DbcAdapter;
 
 import java.util.ArrayList;
 
@@ -15,7 +16,6 @@ public class User implements Convertible {
     private boolean isAdmin;
     private Address address;
     private Cart cart;
-    private UserSettings settings;
     private ArrayList<Order> orderHistory;
 
     public static UserBuilder getBuilder(){
@@ -24,7 +24,7 @@ public class User implements Convertible {
 
     public User(int id, String name, String surname, String email, String password,
                 String phoneNumber, Address address, Cart cart,
-                UserSettings userSettings, Boolean isAdmin, ArrayList<Order> orderHistory){
+                Boolean isAdmin, ArrayList<Order> orderHistory){
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -33,7 +33,6 @@ public class User implements Convertible {
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.cart = cart;
-        this.settings = userSettings;
         this.isAdmin = isAdmin;
         this.orderHistory = orderHistory;
     }
@@ -48,7 +47,6 @@ public class User implements Convertible {
         this.phoneNumber = data[i++];
         this.address = (Address) Address.convertFromRecord(this.id);
         this.cart = (Cart) Cart.convertFromRecord(this.id);
-        this.settings = (UserSettings) UserSettings.convertFromRecord(this.id);
         this.isAdmin = Boolean.parseBoolean(data[i++]);
         this.orderHistory = new ArrayList<>();
         for(int j = i; j < data.length; j++)
@@ -115,14 +113,6 @@ public class User implements Convertible {
         this.cart = cart;
     }
 
-    public UserSettings getSettings() {
-        return settings;
-    }
-
-    public void setSettings(UserSettings settings) {
-        this.settings = settings;
-    }
-
     public boolean getIsAdmin() {
         return isAdmin;
     }
@@ -149,28 +139,27 @@ public class User implements Convertible {
         for (Order o : orderHistory)
             record += ", " + o.getId();
 
-        return record;
+        DbcAdapterRecordString dbcAdapterRecordString = new DbcAdapterRecordString();
+        return dbcAdapterRecordString.adaptDataToDBFormat(record);
     }
 
     static public Convertible convertFromRecord(int id) {
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadData(id, User.class);
+        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
+        String record = (String) dbcAdapter.loadData(id, User.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");
-        return new User(data);
+        return (data != null) ? new User(data) : null;
     }
 
-    public void update(){
+    public void updateInBase(){
         DatabaseConnector db = DatabaseConnector.getInstance();
         db.updateRecord(this);
     }
 
     public void updateObject(){
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadData(id, Order.class);
-//        if(record.isEmpty())
-//            throw new //todo
+        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
+        String record = (String) dbcAdapter.loadData(id, User.class);
         String[] data = record.split(",");
 
         int i = 1;
@@ -181,7 +170,6 @@ public class User implements Convertible {
         this.phoneNumber = data[i++];
         this.address = (Address) Address.convertFromRecord(this.id);
         this.cart = (Cart) Cart.convertFromRecord(this.id);
-        this.settings = (UserSettings) UserSettings.convertFromRecord(this.id);
         this.isAdmin = Boolean.parseBoolean(data[i++]);
         this.orderHistory = new ArrayList<>();
         for(int j = i; j < data.length; j++)

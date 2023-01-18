@@ -14,7 +14,6 @@ public class UserBuilder {
     private Boolean isAdmin  = false;
     private Address address = null;
     private Cart cart = null;
-    private UserSettings settings = null;
     private ArrayList<Order> orderHistory = null;
 
 
@@ -69,11 +68,12 @@ public class UserBuilder {
 
         if(address == null) address = new Address(id);
         if(cart == null) cart = new Cart(id);
-        if(settings == null) settings = new UserSettings(id);
         if(orderHistory == null) orderHistory = new ArrayList<>();
 
+
+
         User u = new User(id, name, surname, email, password, phoneNumber,
-                address, cart, settings, isAdmin, orderHistory);
+                address, cart, isAdmin, orderHistory);
 
         if (dbc.saveToFile(u))
             return u;

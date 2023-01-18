@@ -1,6 +1,7 @@
 package org.shop.classes;
 
 import org.shop.interfaces.Convertible;
+import org.shop.interfaces.DbcAdapter;
 
 import java.util.ArrayList;
 
@@ -34,14 +35,18 @@ public class Order implements Convertible {
     }
 
     private Order(String[] data){
-        this.id = Integer.parseInt(data[0]);
-        this.value = Float.parseFloat(data[1]);
-        this.status = data[2];
-        this.shipping = (Shipping) Shipping.convertFromRecord(Integer.parseInt(data[3]));
-        this.payment = (Payment) Payment.convertFromRecord(Integer.parseInt(data[4]));
+        int i = 0;
+        this.id = Integer.parseInt(data[i++]);
+        this.value = Float.parseFloat(data[i++]);
+        this.status = data[i++];
+        this.shipping = (Shipping) Shipping.convertFromRecord(this.id);
+        this.payment = (Payment) Payment.convertFromRecord(this.id);
         this.products = new ArrayList<>();
-        for(int i = 5; i < data.length; i++)
+        while(i < data.length){
             products.add((Product) Product.convertFromRecord(Integer.parseInt(data[i])));
+            i++;
+        }
+
     }
 
     public int getId() {
@@ -94,39 +99,37 @@ public class Order implements Convertible {
     public String convertToRecord() {
         String record = this.id + ",";
         record += String.format("%.2f", this.value).replace(",",".") + ",";
-        record += status + ",";
-        record += this.shipping.getId() + ",";
-        record += this.payment.getId();
+        record += status;
         for(Product p : products)
             record += "," + p.getId();
-        return record;
+        DbcAdapterRecordString dbcAdapterRecordString = new DbcAdapterRecordString();
+        return dbcAdapterRecordString.adaptDataToDBFormat(record);
     }
 
     static Convertible convertFromRecord(int id) {
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadData(id, Order.class);
+        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
+        String record = (String) dbcAdapter.loadData(id, Order.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");
         return new Order(data);
     }
 
-    public void update(){
+    public void updateInBase(){
         DatabaseConnector db = DatabaseConnector.getInstance();
         db.updateRecord(this);
     }
 
     public void updateObject(){
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadData(id, Order.class);
-//        if(record.isEmpty())
-//            throw new //todo
+        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
+        String record = (String) dbcAdapter.loadData(id, Order.class);
         String[] data = record.split(",");
+
         this.value = Float.parseFloat(data[1]);
         this.status = data[2];
-        this.shipping = (Shipping) Shipping.convertFromRecord(Integer.parseInt(data[3]));
-        this.payment = (Payment) Payment.convertFromRecord(Integer.parseInt(data[4]));
-        this.products = new ArrayList<>();
+        this.shipping = (Shipping) Shipping.convertFromRecord(id);
+        this.payment = (Payment) Payment.convertFromRecord(id);
+        this.products.clear();
         for(int i = 5; i < data.length; i++)
             products.add((Product) Product.convertFromRecord(Integer.parseInt(data[i])));
 

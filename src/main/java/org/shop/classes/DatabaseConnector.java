@@ -244,7 +244,7 @@ public final class DatabaseConnector {
                 return record;
         }
 
-        return ""; // TODO throw error
+        return "";
     }
 
     /**
@@ -302,7 +302,7 @@ public final class DatabaseConnector {
             scanner.nextLine(); //header
             while (scanner.hasNextLine()) {
                 String[] line = scanner.nextLine().split(",");
-                if (Boolean.parseBoolean(line[6]) && Integer.parseInt(line[5]) > 0)
+                if (Integer.parseInt(line[5]) > 0)
                     output.put(Integer.valueOf(line[0]), line[2]);
             }
         } catch (FileNotFoundException e) {
@@ -369,7 +369,7 @@ public final class DatabaseConnector {
 
     /**
      * Looks for user with given data in the database and checks if there is a user with the given email
-     * example: isEmail("aa.aa@aa.aa","password")
+     * example: isEmail("aa.aa@aa.aa")
      *
      * @param email    user mail
      * @return on success: true; on failure: false

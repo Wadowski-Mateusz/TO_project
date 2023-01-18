@@ -1,6 +1,7 @@
 package org.shop.classes;
 
 import org.shop.interfaces.Convertible;
+import org.shop.interfaces.DbcAdapter;
 
 /**
  * id same as order
@@ -48,35 +49,35 @@ public class Shipping implements Convertible {
 
     public void setStatus(String status) {
         this.status = status;
-        update();
+        updateInBase();
         Order order = (Order) Order.convertFromRecord(this.id);
         order.setStatus(status);
-        order.update();
+        order.updateInBase();
     }
 
     public String convertToRecord(){
-        return this.id + "," + this.address.getId() + "," + this.status;
+        String record = this.id + "," + this.address.getId() + "," + this.status;
+        DbcAdapterRecordString dbcAdapterRecordString = new DbcAdapterRecordString();
+        return dbcAdapterRecordString.adaptDataToDBFormat(record);
     }
 
     static Convertible convertFromRecord(int id) {
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadData(id, Shipping.class);
+        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
+        String record = (String) dbcAdapter.loadData(id, Shipping.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");
-        return new Shipping(data);
+        return (data != null) ? new Shipping(data) : null;
     }
 
-    public void update(){
+    public void updateInBase(){
         DatabaseConnector db = DatabaseConnector.getInstance();
         db.updateRecord(this);
     }
 
     public void updateObject(){
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadData(id, Order.class);
-//        if(record.isEmpty())
-//            throw new //todo
+        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
+        String record = (String) dbcAdapter.loadData(id, Shipping.class);
         String[] data = record.split(",");
         this.address = (Address) Address.convertFromRecord(Integer.parseInt(data[1]));
         this.status = data[2];

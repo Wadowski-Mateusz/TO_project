@@ -12,5 +12,8 @@ public interface Convertible {
         throw new UnsupportedOperationException();
     }
 
+    void updateInBase(); // old void update();
+    void updateObject();
+
 }
 

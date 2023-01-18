@@ -1,4 +1,4 @@
-id,category,name,mark,price,howManystock,visibility,[tags;],[characteristics:value;]
-2,laptop,lenovo1,lenovo,4040,789,true,[1;3;5],[RAM:16GB]
-6,laptop,acer1,acer,2020,342,true,[1;2;7],[RAM:8GB]
-10,laptop,hp1,hp,4700,239,true,[6;8;11],[RAM:16GB]
+id,category,name,mark,price,howManystock,inches;battery
+2,laptop,lenovo1,lenovo,4040,789,17;4000W
+6,laptop,acer1,acer,2020,342,15;3000W
+10,laptop,hp1,hp,4700,239,14;2000W

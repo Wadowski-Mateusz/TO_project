@@ -1,6 +1,7 @@
 package org.shop.classes;
 
 import org.shop.interfaces.Convertible;
+import org.shop.interfaces.DbcAdapter;
 
 public class Address implements Convertible {
 
@@ -39,6 +40,16 @@ public class Address implements Convertible {
         }
     }
 
+
+    public Address(String street, String house, String zip, String city, String voivodeships) {
+        this.street = street;
+        this.house = house;
+        this.zip = zip;
+        this.city = city;
+        this.voivodeships = voivodeships;
+    }
+
+
     private Address(String[] data){
         if(data.length != 6)
             throw new IllegalArgumentException("Bad number of parameters\n");
@@ -72,38 +83,37 @@ public class Address implements Convertible {
 
     public void setVoivodeships(String voivodeships) {this.voivodeships = voivodeships;}
 
-    public void update(){
+
+    @Override
+    public String convertToRecord() {
+        String record =  id + "," + street + "," + house + "," + zip + "," + city + "," + voivodeships;
+        DbcAdapterRecordString dbcAdapterRecordString = new DbcAdapterRecordString();
+        return dbcAdapterRecordString.adaptDataToDBFormat(record);
+    }
+
+    static public Convertible convertFromRecord(int id) {
+        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
+        String record = (String) dbcAdapter.loadData(id, Address.class);
+        if(record.isEmpty())
+            return null;
+        String[] data = record.split(",");
+        return (data != null) ? new Address(data) : null;
+    }
+
+    public void updateInBase(){
         DatabaseConnector db = DatabaseConnector.getInstance();
         db.updateRecord(this);
     }
 
-    @Override
-    public String convertToRecord() {
-        return id + "," + street + "," + house + "," + zip + "," + city + "," + voivodeships;
-    }
-
-    static public Convertible convertFromRecord(int id) {
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadData(id, Address.class);
-        if(record.isEmpty())
-            return null;
-        String[] data = record.split(",");
-
-        return new Address(data);
-    }
-
     public void updateObject(){
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadData(id, Order.class);
-//        if(record.isEmpty())
-//            throw new //todo
+        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
+        String record = (String) dbcAdapter.loadData(id, Address.class);
         String[] data = record.split(",");
         this.street = data[1];
         this.house = data[2];
         this.zip = data[3];
         this.city = data[4];
         this.voivodeships = data[5];
-
     }
 
 }

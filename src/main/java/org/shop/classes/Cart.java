@@ -1,6 +1,7 @@
 package org.shop.classes;
 
 import org.shop.interfaces.Convertible;
+import org.shop.interfaces.DbcAdapter;
 
 import java.util.ArrayList;
 
@@ -63,12 +64,14 @@ public class Cart implements Convertible {
         for(Product p : products)
             record += "," + p.getId();
 
-        return record;
+        DbcAdapterRecordString dbcAdapterRecordString = new DbcAdapterRecordString();
+        return dbcAdapterRecordString.adaptDataToDBFormat(record);
     }
 
     static public Convertible convertFromRecord(int id) {
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadData(id, Cart.class);
+
+        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
+        String record = (String) dbcAdapter.loadData(id, Cart.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");
@@ -86,19 +89,11 @@ public class Cart implements Convertible {
         return builder.build();
     }
 
-    public void update(){
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        db.updateRecord(this);
-    }
-
     public Order createOrder(){
 
         for(Product p : products)
             if (p.getHowManyStock() > 0)
-                if(p.getVisibility())
-                    p.setHowManyStock(p.getHowManyStock() - 1);
-                else
-                    throw new UnsupportedOperationException(); // TODO przedmiot juz nie jest widzialny i możliwy do kupienia
+                p.setHowManyStock(p.getHowManyStock() - 1);
             else
                 throw new UnsupportedOperationException(); // TODO przedmiotu juz nie ma na stanie
 
@@ -116,11 +111,14 @@ public class Cart implements Convertible {
         return order;
     }
 
-    public void updateObject(){
+    public void updateInBase(){
         DatabaseConnector db = DatabaseConnector.getInstance();
-        String record = db.loadData(id, Order.class);
-//        if(record.isEmpty())
-//            throw new //todo
+        db.updateRecord(this);
+    }
+
+    public void updateObject(){
+        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
+        String record = (String) dbcAdapter.loadData(id, Cart.class);
         String[] data = record.split(",");
 
         this.products.clear();
