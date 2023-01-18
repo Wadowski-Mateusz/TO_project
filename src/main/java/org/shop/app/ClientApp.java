@@ -3,12 +3,16 @@ package org.shop.app;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClientApp {
     final static int PORT = 7777;
     final static String HOSTNAME = "localhost";
+    String t;
     public static void main(String[] args) throws IOException {
         try {
+            boolean logged = false;
             Socket socket = new Socket(HOSTNAME, PORT);
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader clientInput = new BufferedReader(new InputStreamReader(System.in));
@@ -23,6 +27,121 @@ public class ClientApp {
                 String buf = serverInput.readLine();
                 if (buf != null)
                     System.out.println("Server respond: " + buf);
+                String t;
+                if(!logged){
+                    switch(readerInput) {
+                        //logowanie
+                        case "login":
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            if(t.compareTo("Pomyslne logowanie!") == 0){
+                                logged = true;
+                            }
+                            break;
+                        case "register":
+                            //email
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //haslo
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //powtorz haslo
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //imie
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //nazwisko
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //numer telefonu
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //ulica
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //nr domu
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //kod pocztowy
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //miasto
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            //wojewodztwo
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            break;
+                        case "login debug":
+                            logged = true;
+                            break;
+                    }
+                }
+                else if(logged) {
+                    switch (readerInput) {
+                        // wyswietlenie kategorii produktow
+                        case "show categories":
+                        case "show cpu":
+                        case "show fridges":
+                        case "show laptops":
+                        case "show microwaves":
+                            t = serverInput.readLine();
+                            Integer x = Integer.parseInt(t);
+                            for (int i = 0; i < x; ++i) {
+                                buf = serverInput.readLine();
+                                System.out.println(i + 1 + ". " + buf);
+                            }
+                            break;
+
+                        case "logout":
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            break;
+
+                        //dodanie produktu do koszyka
+                        case "show product":
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
+                            break;
+
+                        //wyswietlenie koszyka
+                        case "show cart":
+                            break;
+                    }
+                }
             }
 
             // Closing the connection
