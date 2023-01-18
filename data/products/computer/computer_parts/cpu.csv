@@ -1,4 +1,4 @@
-id,category,name,mark,price,howManystock,cores;clock
-1,cpu,intel1,Intel,500,283,3;3.8GHz
-5,cpu,amd1,AMD,800,383,5;5.8GHz
-9,cpu,intel2,Intel,900,356,6;2.8GHz
+id,category,name,mark,price,oldPrice,howManystock,cores;clock
+1,cpu,intel1,Intel,500,500,283,3;3.8GHz
+5,cpu,amd1,AMD,800,383,383,5;5.8GHz
+9,cpu,intel2,Intel,900,356,356,6;2.8GHz
