@@ -144,12 +144,12 @@ public class User implements Convertible {
     }
 
     static public Convertible convertFromRecord(int id) {
-        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
-        String record = (String) dbcAdapter.loadData(id, User.class);
+        DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
+        String record = dbcAdapter.loadData(id, User.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");
-        return (data != null) ? new User(data) : null;
+        return new User(data);
     }
 
     public void updateInBase(){
@@ -158,8 +158,8 @@ public class User implements Convertible {
     }
 
     public void updateObject(){
-        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
-        String record = (String) dbcAdapter.loadData(id, User.class);
+        DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
+        String record = dbcAdapter.loadData(id, User.class);
         String[] data = record.split(",");
 
         int i = 1;
@@ -176,5 +176,14 @@ public class User implements Convertible {
             orderHistory.add((Order) Order.convertFromRecord(Integer.parseInt(data[j])));
 
     }
+
+    void subscribeNewsletter(){
+        Newsletter.getInstance().addUser(this);
+    }
+
+    void unsubscribeNewsletter(){
+        Newsletter.getInstance().deleteUser(this);
+    }
+
 
 }

@@ -1,4 +1,10 @@
-id,value,status,shipping,payment,productsId
-1,1000,ready,issuedForDelivery,paid,5,4,2,7
-2,100,ready,issuedForDelivery,unpaid,8
-3,190,inPreparation,inPreparation,paid,8,9
+id,value,status,productsId
+1,1000,ready,5,4,2,7
+2,100,ready,8
+3,190,inPreparation,8,9
+4,1000,ready,5,4,2,7
+5,100,ready,8
+6,190,inPreparation,8,9
+7,1000,ready,5,4,2,7
+8,100,ready,8
+9,190,inPreparation,8,9

@@ -1,4 +1,4 @@
 id,category,name,mark,price,oldPrice,howManystock,volume;width;length;height
 0,fridge,beko1,beko,1892,1892,123,25L;123cm;124cm;125cm
-4,fridge,whirlpool1,whirlpool,4000,4000,238,213L;324cm;2345cm;234cm
+4,fridge,whirlpool1,whirlpool,4000.0,4000.0,356,2345cm;234cm;324cm;213L
 8,fridge,samsung1,samsung,3383,3383,282,1231L;2341cm;1234cm;123cm
