@@ -178,8 +178,8 @@ public class Product implements Convertible {
         this.oldPrice = this.price;
         this.price = price;
         updateInBase();
-        notifyObservers();
-        //notifyNewsletter();
+        //notifyObservers();
+        notifyNewsletter();
     }
 
     public int getHowManyStock() {
