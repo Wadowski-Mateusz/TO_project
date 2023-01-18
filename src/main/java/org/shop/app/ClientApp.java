@@ -10,6 +10,7 @@ public class ClientApp {
     final static int PORT = 7777;
     final static String HOSTNAME = "localhost";
     String t;
+
     public static void main(String[] args) throws IOException {
         try {
             boolean logged = false;
@@ -28,8 +29,8 @@ public class ClientApp {
                 if (buf != null)
                     System.out.println("Server respond: " + buf);
                 String t;
-                if(!logged){
-                    switch(readerInput) {
+                if (!logged) {
+                    switch (readerInput) {
                         //logowanie
                         case "login":
                             t = serverInput.readLine();
@@ -42,7 +43,7 @@ public class ClientApp {
                             printWriter.println(readerInput);
                             t = serverInput.readLine();
                             System.out.println(t);
-                            if(t.compareTo("Pomyslne logowanie!") == 0){
+                            if (t.compareTo("Pomyslne logowanie!") == 0) {
                                 logged = true;
                                 t = serverInput.readLine();
                                 if (t.compareTo("Jestes adminem.") == 0) {
@@ -111,8 +112,7 @@ public class ClientApp {
                             logged = true;
                             break;
                     }
-                }
-                else if(logged) {
+                } else if (logged) {
                     switch (readerInput) {
                         // wyswietlenie kategorii produktow
                         case "show categories":
@@ -151,7 +151,7 @@ public class ClientApp {
             // Closing the connection
             socket.close();
 
-        }catch(SocketException e) {
+        } catch (SocketException e) {
             System.out.println("Server is unavailable.");
             System.exit(1);
         }
