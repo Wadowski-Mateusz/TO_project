@@ -120,7 +120,6 @@ public final class DatabaseConnector {
         String fileName;
         if (convertible instanceof Product) {
             fileName = ((Product) convertible).getCategory() + ".csv";
-            System.out.println(fileName);
             return DIR_PRODUCTS + fileName;
         } else {
             fileName = convertible.getClass().getSimpleName().toLowerCase() + ".csv";
@@ -254,14 +253,18 @@ public final class DatabaseConnector {
      * @return on success returns true; on failure returns false
      */
     public boolean updateRecord(Convertible convertible) {
+
         try {
             String path = findFilePath(convertible);
             BufferedReader file = new BufferedReader(new FileReader(path));
+
             StringBuffer inputBuffer = new StringBuffer();
             String line;
             int id = Integer.parseInt(convertible.convertToRecord().split(",")[0]);
+            line = file.readLine();
+            inputBuffer.append(line).append('\n');
+
             while ((line = file.readLine()) != null) {
-//                System.out.println(line);
                 if (Integer.parseInt(line.split(",")[0]) == id) {
                     line = convertible.convertToRecord();
                     inputBuffer.append(line).append('\n');
@@ -269,6 +272,12 @@ public final class DatabaseConnector {
                 }
                 inputBuffer.append(line).append('\n');
             }
+
+            while ((line = file.readLine()) != null)
+                inputBuffer.append(line).append('\n');
+            inputBuffer.deleteCharAt(inputBuffer.length()-1);
+
+
 
             file.close();
 
@@ -281,6 +290,7 @@ public final class DatabaseConnector {
             System.out.println("updateRecord() error");
             return false;
         }
+
     }
 
     /**

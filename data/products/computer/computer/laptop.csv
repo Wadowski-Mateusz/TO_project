@@ -1,4 +1,4 @@
 id,category,name,mark,price,oldPrice,howManystock,inches;battery
-2,laptop,lenovo1,lenovo,4040,4040,789,17;4000W
+2,laptop,lenovo1,lenovo,4040.0,4040.0,356,4000W;17
 6,laptop,acer1,acer,2020,2020,342,15;3000W
 10,laptop,hp1,hp,4700,4700,239,14;2000W

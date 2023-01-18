@@ -1,10 +1,10 @@
 package org.shop.classes;
 
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.shop.interfaces.Convertible;
 import org.shop.interfaces.DbcAdapter;
+import org.shop.interfaces.Observer;
 
 import java.util.*;
 
@@ -164,7 +164,9 @@ public class Product implements Convertible {
         howManyStock = json.getInt("howManyStock");
     }
 
-
+    private void notifyNewsletter(){
+        Newsletter.getInstance().update(name, price - oldPrice);
+    }
 
     public int getId() {
         return id;
@@ -175,7 +177,10 @@ public class Product implements Convertible {
     }
 
     public void setPrice(float price) {
+        this.oldPrice = this.price;
         this.price = price;
+        updateInBase();
+        notifyNewsletter();
     }
 
     public int getHowManyStock() {
