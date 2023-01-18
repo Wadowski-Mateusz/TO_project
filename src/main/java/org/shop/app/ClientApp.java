@@ -130,7 +130,11 @@ public class ClientApp {
                             break;
 
                         //dodanie produktu do koszyka
-                        case "add product to cart":
+                        case "show product":
+                            t = serverInput.readLine();
+                            System.out.println(t);
+                            readerInput = clientInput.readLine();
+                            printWriter.println(readerInput);
                             break;
 
                         //wyswietlenie koszyka

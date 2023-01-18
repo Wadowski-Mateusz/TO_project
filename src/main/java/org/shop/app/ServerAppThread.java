@@ -32,7 +32,7 @@ public class ServerAppThread extends Thread {
         final DatabaseConnector dbc = DatabaseConnector.getInstance();
         try {
             boolean logged = false;
-            String email, password, password2, name, surname, phoneNumber, street, house, zip, city, voivodeship;
+            String email, password, password2, name, surname, phoneNumber, street, house, zip, city, voivodeship, id;
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintStream printStream = new PrintStream(socket.getOutputStream());
             String message;
@@ -87,7 +87,9 @@ public class ServerAppThread extends Thread {
                             voivodeship = bufferedReader.readLine();
                             Address address = new Address(street, house, zip, city, voivodeship);
                             UserBuilder builder = User.getBuilder();
-                            User u = builder.setEmail(email).setPassword(password).setName(name).setSurname(surname).setPhoneNumber(phoneNumber).setAddress(address).build();
+                            builder.setEmail(email).setPassword(password).setName(name).setSurname(surname).setPhoneNumber(phoneNumber).setAddress(address);
+                            //-----
+                            User u = builder.build();
                             break;
 
                         case "login debug":
@@ -147,7 +149,9 @@ public class ServerAppThread extends Thread {
                             printStream.println("Pomyslnie wylogowano");
 
                         //dodanie produktu do koszyka
-                        case "add product to cart":
+                        case "show product":
+                            printStream.println("Podaj id");
+                            id = bufferedReader.readLine();
                             break;
 
                         //wyswietlenie koszyka
