@@ -73,15 +73,15 @@ public class ProductFactory {
      * */
 
     private static Product createProduct(int id, String name, String mark, float price,
-                                         int howManyStock){
+                                         float oldPrice, int howManyStock){
 
-        return new Product(id, name, mark, price, howManyStock);
+        return new Product(id, name, mark, price, oldPrice, howManyStock);
     }
 
-    public static Product createMicrowave(int id, String name, String mark, float price,
+    public static Product createMicrowave(int id, String name, String mark, float price, float oldPrice,
                                           int howManyStock, ArrayList<String> characteristics){
         // Create product
-        Product microwave = ProductFactory.createProduct(id, name, mark, price, howManyStock);
+        Product microwave = ProductFactory.createProduct(id, name, mark, price, oldPrice, howManyStock);
         microwave.setCategory(ProductCategory.MICROWAVE);
 
 
@@ -92,10 +92,10 @@ public class ProductFactory {
         return microwave;
     }
 
-    public static Product createFridge(int id, String name, String mark, float price,
+    public static Product createFridge(int id, String name, String mark, float price, float oldPrice,
                                        int howManyStock, ArrayList<String> characteristics){
         // Create product
-        Product fridge = ProductFactory.createProduct(id, name, mark, price, howManyStock);
+        Product fridge = ProductFactory.createProduct(id, name, mark, price, oldPrice, howManyStock);
         fridge.setCategory(ProductCategory.FRIDGE);
 
         int i = 0;
@@ -108,10 +108,10 @@ public class ProductFactory {
         return fridge;
     }
 
-    public static Product createLaptop(int id, String name, String mark, float price,
+    public static Product createLaptop(int id, String name, String mark, float price, float oldPrice,
                                        int howManyStock, ArrayList<String> characteristics){
         // Create product
-        Product laptop = ProductFactory.createProduct(id, name, mark, price, howManyStock);
+        Product laptop = ProductFactory.createProduct(id, name, mark, price, oldPrice, howManyStock);
         laptop.setCategory(ProductCategory.LAPTOP);
 
         int i = 0;
@@ -121,10 +121,10 @@ public class ProductFactory {
         return laptop;
     }
 
-    public static Product createCPU(int id, String name, String mark, float price,
+    public static Product createCPU(int id, String name, String mark, float price, float oldPrice,
                                     int howManyStock, ArrayList<String> characteristics){
         // Create product
-        Product cpu = ProductFactory.createProduct(id, name, mark, price, howManyStock);
+        Product cpu = ProductFactory.createProduct(id, name, mark, price, oldPrice, howManyStock);
         cpu.setCategory(ProductCategory.CPU);
 
         int i = 0;

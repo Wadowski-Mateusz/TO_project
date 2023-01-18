@@ -22,6 +22,7 @@ public class DbcAdapterRecordJSON implements DbcAdapter<JSONObject> {
         json.put("name", data[i++]);
         json.put("mark", data[i++]);
         json.put("price", data[i++]);
+        json.put("oldPrice", data[i++]);
         json.put("howManyStock", data[i++]);
 
         String[] characteristicsTemp = data[i].split(";");
@@ -39,6 +40,7 @@ public class DbcAdapterRecordJSON implements DbcAdapter<JSONObject> {
                 jsonObject.getString("name") + "," +
                 jsonObject.getString("mark") + "," +
                 jsonObject.getFloat("price") + "," +
+                jsonObject.getFloat("oldPrice") + "," +
                 jsonObject.getInt("howManyStock") + ",";
 
         JSONArray jsonArray = new JSONArray(jsonObject.getJSONArray("characteristics"));

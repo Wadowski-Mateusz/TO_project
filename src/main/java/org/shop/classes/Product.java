@@ -16,6 +16,7 @@ public class Product implements Convertible {
     private String name;
     private String mark;
     private float price;
+    private float oldPrice;
     private List<Observer> observers;
     private static int howManyStock;
     private Map<String, String> characteristics;
@@ -24,6 +25,7 @@ public class Product implements Convertible {
         this.name = name;
         this.mark = mark;
         this.price = price;
+        this.oldPrice = price;
         this.howManyStock = howManyStock;
         this.characteristics = new TreeMap<>();
         this.observers = new ArrayList<>();
@@ -37,11 +39,12 @@ public class Product implements Convertible {
     }
 
     // For items loaded from database
-    public Product(int id, String name, String mark, float price, int howManyStock){
+    public Product(int id, String name, String mark, float price, float oldPrice, int howManyStock){
         this.id = id;
         this.name = name;
         this.mark = mark;
         this.price = price;
+        this.oldPrice = oldPrice;
         this.howManyStock = howManyStock;
         this.characteristics = new TreeMap<>();
         this.observers = new ArrayList<>();
@@ -71,16 +74,6 @@ public class Product implements Convertible {
         }
     }
 
-
-    public static Product fastMicrowave(){
-        ArrayList<String> a = new ArrayList<>();
-        a.add("66W");
-        a.add("5L");
-        return  ProductFactory.createMicrowave("microwave_fast", "mark_fast", 0.01F,
-                123, a);
-    }
-
-
     @Override
     public String convertToRecord() {
         JSONObject record = new JSONObject();
@@ -90,14 +83,16 @@ public class Product implements Convertible {
         record.put("name", this.name);
         record.put("mark", this.mark);
         record.put("price", this.price);
+        record.put("oldPrice", this.oldPrice);
         record.put("howManyStock", howManyStock);
 
         ArrayList<String> characteristicsValues = new ArrayList<>(this.characteristics.values());
         record.put("characteristics", characteristicsValues);
         DbcAdapter<JSONObject> dbcAdapter = new DbcAdapterRecordJSON();
-        System.out.println(record.toString());
+
         return dbcAdapter.adaptDataToDBFormat(record);
     }
+
 
     public static Convertible convertFromRecord(int id){
         DbcAdapter<JSONObject> dbcAdapter = new DbcAdapterRecordJSON();
@@ -115,24 +110,28 @@ public class Product implements Convertible {
             case "cpu":
                 p = ProductFactory.createCPU(json.getInt("id"), json.getString("name"), json.getString("mark"),
                         json.getFloat("price"),
+                        json.getFloat("oldPrice"),
                         json.getInt("howManyStock"),
                         characteristicsFromJSON);
                 break;
             case "fridge":
                 p = ProductFactory.createFridge(json.getInt("id"), json.getString("name"), json.getString("mark"),
                         json.getFloat("price"),
+                        json.getFloat("oldPrice"),
                         json.getInt("howManyStock"),
                         characteristicsFromJSON);
                 break;
             case "laptop":
                 p = ProductFactory.createLaptop(json.getInt("id"), json.getString("name"), json.getString("mark"),
                         json.getFloat("price"),
+                        json.getFloat("oldPrice"),
                         json.getInt("howManyStock"),
                         characteristicsFromJSON);
                 break;
             case "microwave":
                 p = ProductFactory.createMicrowave(json.getInt("id"), json.getString("name"), json.getString("mark"),
                         json.getFloat("price"),
+                        json.getFloat("oldPrice"),
                         json.getInt("howManyStock"),
                         characteristicsFromJSON);
                 break;
