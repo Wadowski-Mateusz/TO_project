@@ -68,9 +68,7 @@ public class Product implements Convertible {
 
     public void updateProductPrice(float newPrice) {
         if (price > newPrice) {
-            this.price = newPrice;
-            // TODO: update price in database
-            notifyObservers();
+            setPrice(newPrice);
         }
     }
 
@@ -180,7 +178,8 @@ public class Product implements Convertible {
         this.oldPrice = this.price;
         this.price = price;
         updateInBase();
-        notifyNewsletter();
+        notifyObservers();
+        //notifyNewsletter();
     }
 
     public int getHowManyStock() {
