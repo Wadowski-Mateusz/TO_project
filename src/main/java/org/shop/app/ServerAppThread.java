@@ -149,6 +149,7 @@ public class ServerAppThread extends Thread {
                             printStream.println("Pomyslnie wylogowano");
 
                             //dodanie produktu do koszyka
+
                         case "show product":
                             printStream.println("Podaj id");
                             id = bufferedReader.readLine();
