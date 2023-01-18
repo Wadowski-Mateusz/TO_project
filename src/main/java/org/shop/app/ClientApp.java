@@ -44,6 +44,10 @@ public class ClientApp {
                             System.out.println(t);
                             if(t.compareTo("Pomyslne logowanie!") == 0){
                                 logged = true;
+                                t = serverInput.readLine();
+                                if (t.compareTo("Jestes adminem.") == 0) {
+                                    System.out.println(t);
+                                }
                             }
                             break;
                         case "register":

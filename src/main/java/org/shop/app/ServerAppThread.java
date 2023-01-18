@@ -31,6 +31,7 @@ public class ServerAppThread extends Thread {
         final DatabaseConnector dbc = DatabaseConnector.getInstance();
         try {
             boolean logged = false;
+            boolean isAdmin = false;
             String email, password, password2, name, surname, phoneNumber, street, house, zip, city, voivodeship, id;
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintStream printStream = new PrintStream(socket.getOutputStream());
@@ -55,6 +56,11 @@ public class ServerAppThread extends Thread {
                             if (checker.check(user)) {
                                 printStream.println("Pomyslne logowanie!");
                                 logged = true;
+                                UserChecker adminChecker = new RoleChecker(null);
+                                if (adminChecker.check(user)) {
+                                    printStream.println("Jestes adminem.");
+                                    isAdmin = true;
+                                }
                             } else {
                                 printStream.println("Bledny email lub haslo!");
                             }
