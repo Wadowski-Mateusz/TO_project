@@ -1,18 +1,34 @@
 package org.shop.classes;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.shop.classes.stubs.MicrowaveAdapterStub;
+import org.shop.classes.stubs.UserAdapterStub;
+import org.shop.interfaces.Convertible;
+import org.shop.interfaces.DbcAdapter;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
 
 class NewsletterTest {
+
+    DbcAdapter productStub;
+    DbcAdapter userStub;
+
+    @BeforeEach
+    void init(){
+        productStub = new MicrowaveAdapterStub();
+        Product.setDbcAdapter(productStub);
+
+        userStub = new UserAdapterStub();
+        User.setDbcAdapter(userStub);
+    }
+
 
     @Test
     void getInstance() {
         Newsletter news = Newsletter.getInstance();
         Newsletter news2 = Newsletter.getInstance();
-        if(news2.hashCode() == news2.hashCode())
+        if(news2.hashCode() == news.hashCode())
             assert true;
         else
             assert false;
@@ -20,7 +36,7 @@ class NewsletterTest {
 
     @Test
     void update() {
-        Newsletter news = Newsletter.getInstance();
+        Newsletter.setDIR("src/test/mails/");
 
         User u1 = (User) User.convertFromRecord(1);
         User u2 = (User) User.convertFromRecord(2);
@@ -34,35 +50,11 @@ class NewsletterTest {
         Product p3 = (Product) Product.convertFromRecord(3);
         Product p4 = (Product) Product.convertFromRecord(4);
 
-        float[] prices = new float[4];
-        prices[0] = p1.getPrice();
-        prices[1] = p2.getPrice();
-        prices[2] = p3.getPrice();
-        prices[3] = p4.getPrice();
-
-        float[] oldPrices = new float[4];
-        oldPrices[0] = p1.getPrice();
-        oldPrices[1] = p2.getPrice();
-        oldPrices[2] = p3.getPrice();
-        oldPrices[3] = p4.getPrice();
-
-
         // tets
-        p1.setPrice(11.0F);
-        p2.setPrice(12.0F);
-        p3.setPrice(12.0F);
-        p4.setPrice(13.0F);
-
-        // back
-        p1.setPrice(oldPrices[0]);
-        p2.setPrice(oldPrices[1]);
-        p3.setPrice(oldPrices[2]);
-        p4.setPrice(oldPrices[3]);
-
-        p1.setPrice(prices[0]);
-        p2.setPrice(prices[1]);
-        p3.setPrice(prices[2]);
-        p4.setPrice(prices[3]);
+        p1.setPrice(0.0F);
+        p2.setPrice(1.0F);
+        p3.setPrice(2.0F);
+        p4.setPrice(3.0F);
         
         assert true;
     }
@@ -74,15 +66,11 @@ class NewsletterTest {
         User u2 = (User) User.convertFromRecord(2);
         User u3 = (User) User.convertFromRecord(3);
 
-        assert u1 != null;
-        u1.subscribeNewsletter();
-        assert u2 != null;
-        u2.subscribeNewsletter();
-        assert u3 != null;
-        u3.subscribeNewsletter();
+        assert u1 != null;  u1.subscribeNewsletter();
+        assert u2 != null;  u2.subscribeNewsletter();
+        assert u3 != null;  u3.subscribeNewsletter();
 
         ArrayList<Integer> ids = (ArrayList<Integer>) news.getUsersId();
-
 
         if(ids.contains(u1.getId()) && ids.contains(u2.getId()) && ids.contains(u3.getId()))
             assert true;
@@ -98,12 +86,9 @@ class NewsletterTest {
         User u2 = (User) User.convertFromRecord(2);
         User u3 = (User) User.convertFromRecord(3);
 
-        assert u1 != null;
-        u1.subscribeNewsletter();
-        assert u2 != null;
-        u2.subscribeNewsletter();
-        assert u3 != null;
-        u3.subscribeNewsletter();
+        assert u1 != null;  u1.subscribeNewsletter();
+        assert u2 != null;  u2.subscribeNewsletter();
+        assert u3 != null;  u3.subscribeNewsletter();
 
         ArrayList<Integer> ids = (ArrayList<Integer>) news.getUsersId();
 
@@ -114,9 +99,6 @@ class NewsletterTest {
         else
             assert true;
     }
-
-
-
 
 
 }

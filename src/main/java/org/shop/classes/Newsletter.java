@@ -15,10 +15,15 @@ public class Newsletter implements Observer   {
     private volatile List<Integer> usersId;
     private volatile Map<String, Float> products;
     private static volatile Newsletter instance;
+    private static String DIR = "mails/";
 
     private Newsletter() {
         usersId = new ArrayList<>();
         products = new TreeMap<>();
+    }
+
+    public static void setDIR(String dir){
+        DIR = dir;
     }
 
     public static Newsletter getInstance() {
@@ -62,7 +67,6 @@ public class Newsletter implements Observer   {
     }
 
     private void sendMails(){
-
         if(isSending)
             return;
 
@@ -81,13 +85,13 @@ public class Newsletter implements Observer   {
             User u = (User) User.convertFromRecord(id);
             assert u != null;
             String mail = u.getEmail();
-            String path = "mails/" + mail;
+            String path = DIR + mail;
             try {
                 Writer output = new BufferedWriter(new FileWriter(path, true));
                 output.append(System.lineSeparator()).append(msg);
                 output.close();
             } catch (IOException e) {
-                System.out.println("Observer error");
+                System.out.println("Observer error\t" + DIR + u.getEmail());
             }
         }
 
