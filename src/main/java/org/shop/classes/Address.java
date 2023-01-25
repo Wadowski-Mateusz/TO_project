@@ -11,6 +11,9 @@ public class Address implements Convertible {
     private String zip;
     private String city;
     private String voivodeships;
+    private static DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
+
+    public Address(){}
 
     public Address(int id) {
         this.id = id;
@@ -86,16 +89,18 @@ public class Address implements Convertible {
     public void setVoivodeships(String voivodeships) {this.voivodeships = voivodeships; updateInBase();}
 
 
+    public static void setDbcAdapter(DbcAdapter db) {
+        dbcAdapter = db;
+    }
+
     @Override
     public String convertToRecord() {
         String record =  id + "," + street + "," + house + "," + zip + "," + city + "," + voivodeships;
-        DbcAdapterRecordString dbcAdapterRecordString = new DbcAdapterRecordString();
-        return dbcAdapterRecordString.adaptDataToDBFormat(record);
+        return dbcAdapter.adaptDataToDBFormat(record);
     }
 
     static public Convertible convertFromRecord(int id) {
-        DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
-        String record = (String) dbcAdapter.loadData(id, Address.class);
+        String record = dbcAdapter.loadData(id, Address.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");
@@ -103,12 +108,11 @@ public class Address implements Convertible {
     }
 
     public void updateInBase(){
-        DatabaseConnector.getInstance().updateRecord(this);
+        dbcAdapter.updateInBase(this);
     }
 
     public void updateObject(){
-        DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
-        String record = (String) dbcAdapter.loadData(id, Address.class);
+        String record = dbcAdapter.loadData(id, Address.class);
         String[] data = record.split(",");
         this.street = data[1];
         this.house = data[2];

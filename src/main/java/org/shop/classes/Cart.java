@@ -10,9 +10,12 @@ import java.util.ArrayList;
  * id same as user id
  * */
 public class Cart implements Convertible {
-    private final int id;
+    private int id;
     private float value;
     private ArrayList<Product> products;
+    private static DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
+
+    public Cart(){}
 
     public Cart(int id){
         this.id = id;
@@ -58,6 +61,10 @@ public class Cart implements Convertible {
         updateInBase();
     }
 
+    public static void setDbcAdapter(DbcAdapter db) {
+        dbcAdapter = db;
+    }
+
     @Override
     public String convertToRecord() {
         String record = this.id + ",";
@@ -65,14 +72,12 @@ public class Cart implements Convertible {
         for(Product p : products)
             record += "," + p.getId();
 
-        DbcAdapterRecordString dbcAdapterRecordString = new DbcAdapterRecordString();
-        return dbcAdapterRecordString.adaptDataToDBFormat(record);
+        return dbcAdapter.adaptDataToDBFormat(record);
     }
 
     static public Convertible convertFromRecord(int id) {
 
-        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
-        String record = (String) dbcAdapter.loadData(id, Cart.class);
+        String record = dbcAdapter.loadData(id, Cart.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");
@@ -113,13 +118,11 @@ public class Cart implements Convertible {
     }
 
     public void updateInBase(){
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        db.updateRecord(this);
+        dbcAdapter.updateInBase(this);
     }
 
     public void updateObject(){
-        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
-        String record = (String) dbcAdapter.loadData(id, Cart.class);
+        String record = dbcAdapter.loadData(id, Cart.class);
         String[] data = record.split(",");
 
         this.products.clear();

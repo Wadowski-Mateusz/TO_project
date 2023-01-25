@@ -2,12 +2,15 @@ package org.shop.classes;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.shop.interfaces.Convertible;
 import org.shop.interfaces.DbcAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DbcAdapterRecordJSON implements DbcAdapter<JSONObject> {
+
+    DatabaseConnector db = DatabaseConnector.getInstance();
 
     @Override
     public JSONObject loadData(int id, Class convertible) {
@@ -48,6 +51,11 @@ public class DbcAdapterRecordJSON implements DbcAdapter<JSONObject> {
             record += jsonArray.get(i) + ";";
         record += jsonArray.get(jsonArray.length() - 1);
         return record;
+    }
+
+    @Override
+    public void updateInBase(Convertible convertible) {
+        db.updateRecord(convertible);
     }
 
 }

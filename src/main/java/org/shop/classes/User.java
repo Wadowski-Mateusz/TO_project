@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class User implements Convertible {
 
-    private final int id;
+    private int id;
     private String name;
     private String surname;
     private String email;
@@ -18,9 +18,14 @@ public class User implements Convertible {
     private Cart cart;
     private ArrayList<Order> orderHistory;
 
+    private static DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
+
+
     public static UserBuilder getBuilder(){
         return new UserBuilder();
     }
+
+    public User(){}
 
     public User(int id, String name, String surname, String email, String password,
                 String phoneNumber, Address address, Cart cart,
@@ -144,6 +149,10 @@ public class User implements Convertible {
         updateInBase();
     }
 
+    public static void setDbcAdapter(DbcAdapter db) {
+        dbcAdapter = db;
+    }
+
     @Override
     public String convertToRecord() {
         String record = this.id + ","
@@ -154,12 +163,10 @@ public class User implements Convertible {
         for (Order o : orderHistory)
             record += ", " + o.getId();
 
-        DbcAdapterRecordString dbcAdapterRecordString = new DbcAdapterRecordString();
-        return dbcAdapterRecordString.adaptDataToDBFormat(record);
+        return dbcAdapter.adaptDataToDBFormat(record);
     }
 
     static public Convertible convertFromRecord(int id) {
-        DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
         String record = dbcAdapter.loadData(id, User.class);
         if(record.isEmpty())
             return null;
@@ -168,12 +175,10 @@ public class User implements Convertible {
     }
 
     public void updateInBase(){
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        db.updateRecord(this);
+        dbcAdapter.updateInBase(this);
     }
 
     public void updateObject(){
-        DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
         String record = dbcAdapter.loadData(id, User.class);
         String[] data = record.split(",");
 

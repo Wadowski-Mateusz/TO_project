@@ -19,6 +19,9 @@ public class Order implements Convertible {
     private ArrayList<Product> products;
     private Shipping shipping;
     private Payment payment;
+    private static DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
+
+    public Order(){}
 
     public Order(float value, ArrayList<Product> products){
         this.value = value;
@@ -95,6 +98,10 @@ public class Order implements Convertible {
         db.updateRecord(this);
     }
 
+    public static void setDbcAdapter(DbcAdapter db) {
+        dbcAdapter = db;
+    }
+
     @Override
     public String convertToRecord() {
         String record = this.id + ",";
@@ -102,12 +109,11 @@ public class Order implements Convertible {
         record += status;
         for(Product p : products)
             record += "," + p.getId();
-        DbcAdapterRecordString dbcAdapterRecordString = new DbcAdapterRecordString();
-        return dbcAdapterRecordString.adaptDataToDBFormat(record);
+        return dbcAdapter.adaptDataToDBFormat(record);
     }
 
     static Convertible convertFromRecord(int id) {
-        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
+
         String record = (String) dbcAdapter.loadData(id, Order.class);
         if(record.isEmpty())
             return null;
@@ -116,12 +122,10 @@ public class Order implements Convertible {
     }
 
     public void updateInBase(){
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        db.updateRecord(this);
+        dbcAdapter.updateInBase(this);
     }
 
     public void updateObject(){
-        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
         String record = (String) dbcAdapter.loadData(id, Order.class);
         String[] data = record.split(",");
 

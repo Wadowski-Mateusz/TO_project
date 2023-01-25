@@ -20,6 +20,9 @@ public class Product implements Convertible {
     private List<Observer> observers;
     private static int howManyStock;
     private Map<String, String> characteristics;
+    private static DbcAdapter<JSONObject> dbcAdapter = new DbcAdapterRecordJSON();
+
+    public Product(){}
 
     public Product(String name, String mark, float price, int howManyStock){
         this.name = name;
@@ -70,6 +73,11 @@ public class Product implements Convertible {
         }
     }
 
+
+    public static void setDbcAdapter(DbcAdapter db) {
+        dbcAdapter = db;
+    }
+
     @Override
     public String convertToRecord() {
         JSONObject record = new JSONObject();
@@ -84,14 +92,12 @@ public class Product implements Convertible {
 
         ArrayList<String> characteristicsValues = new ArrayList<>(this.characteristics.values());
         record.put("characteristics", characteristicsValues);
-        DbcAdapter<JSONObject> dbcAdapter = new DbcAdapterRecordJSON();
 
         return dbcAdapter.adaptDataToDBFormat(record);
     }
 
 
     public static Convertible convertFromRecord(int id){
-        DbcAdapter<JSONObject> dbcAdapter = new DbcAdapterRecordJSON();
         JSONObject json = dbcAdapter.loadData(id, Product.class);
 
         JSONArray jsonArray = json.getJSONArray("characteristics");
@@ -150,12 +156,10 @@ public class Product implements Convertible {
     }
 
     public void updateInBase(){
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        db.updateRecord(this);
+        dbcAdapter.updateInBase(this);
     }
 
     public void updateObject(){
-        DbcAdapter<JSONObject> dbcAdapter = new DbcAdapterRecordJSON();
         JSONObject json = dbcAdapter.loadData(id, Product.class);
         howManyStock = json.getInt("howManyStock");
     }

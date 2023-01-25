@@ -14,9 +14,12 @@ public class Shipping implements Convertible {
     public static final String STATUS_RECEIVED = "odebrano";
     public static final String STATUS_PREPARATION = "w przygotowaniu";
     public static final String STATUS_RETURNED = "zwrocono";
-    private final int id;
+    private int id;
     private Address address;
     private String status;
+    private static DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
+
+    public Shipping(){}
 
     public Shipping(int id, Address address){
         this.id = id;
@@ -55,14 +58,16 @@ public class Shipping implements Convertible {
         order.updateInBase();
     }
 
+    public static void setDbcAdapter(DbcAdapter db) {
+        dbcAdapter = db;
+    }
+
     public String convertToRecord(){
         String record = this.id + "," + this.address.getId() + "," + this.status;
-        DbcAdapterRecordString dbcAdapterRecordString = new DbcAdapterRecordString();
-        return dbcAdapterRecordString.adaptDataToDBFormat(record);
+        return dbcAdapter.adaptDataToDBFormat(record);
     }
 
     static Convertible convertFromRecord(int id) {
-        DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
         String record = (String) dbcAdapter.loadData(id, Shipping.class);
         if(record.isEmpty())
             return null;
@@ -71,12 +76,10 @@ public class Shipping implements Convertible {
     }
 
     public void updateInBase(){
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        db.updateRecord(this);
+        dbcAdapter.updateInBase(this);
     }
 
     public void updateObject(){
-        DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
         String record = (String) dbcAdapter.loadData(id, Shipping.class);
         String[] data = record.split(",");
         this.address = (Address) Address.convertFromRecord(Integer.parseInt(data[1]));

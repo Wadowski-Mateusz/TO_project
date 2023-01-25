@@ -7,9 +7,13 @@ public class Payment implements Convertible {
 
     public static final String STATUS_PAYMENT_FALSE = "Nieoplacone";
     public static final String STATUS_PAYMENT_TRUE = "Oplacone";
-    private final int id;
+    private int id;
     private float value;
     private String status;
+    private static DbcAdapter<String> dbcAdapter = new DbcAdapterRecordString();
+
+
+    public Payment(){}
 
     /**
      * @param id same as order id
@@ -55,32 +59,34 @@ public class Payment implements Convertible {
         throw new UnsupportedOperationException();
     }
 
+
+    public static void setDbcAdapter(DbcAdapter dbc) {
+        dbcAdapter = dbc;
+    }
+
     @Override
     public String convertToRecord() {
         String record = this.id + ","
                 + String.format("%.2f", this.value).replace(",",".")
                 + "," + this.status;
-        DbcAdapterRecordString dbcAdapterRecordString = new DbcAdapterRecordString();
-        return dbcAdapterRecordString.adaptDataToDBFormat(record);
+        return dbcAdapter.adaptDataToDBFormat(record);
     }
 
     static Convertible convertFromRecord(int id) {
-        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
-        String record = (String) dbcAdapter.loadData(id, Payment.class);
+        String record = dbcAdapter.loadData(id, Payment.class);
         if(record.isEmpty())
             return null;
         String[] data = record.split(",");
-        return (data != null) ? new Payment(data) : null;
+
+        return new Payment(data);
     }
 
     public void updateInBase(){
-        DatabaseConnector db = DatabaseConnector.getInstance();
-        db.updateRecord(this);
+        dbcAdapter.updateInBase(this);
     }
 
     public void updateObject(){
-        DbcAdapter dbcAdapter = new DbcAdapterRecordString();
-        String record = (String) dbcAdapter.loadData(id, Payment.class);
+        String record = dbcAdapter.loadData(id, Payment.class);
         String[] data = record.split(",");
         this.value = Float.parseFloat(data[1]);
         this.status = data[2];

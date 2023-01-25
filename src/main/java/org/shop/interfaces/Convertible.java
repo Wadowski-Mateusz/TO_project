@@ -4,6 +4,11 @@ package org.shop.interfaces;
  * Save and load entities to database*/
 public interface Convertible {
 
+    static DbcAdapter dbcAdapter = null;
+    public static void setDbcAdapter(DbcAdapter dbcAdapter){
+        throw new UnsupportedOperationException();
+    }
+
     // Saves object to database
     String convertToRecord();
 

@@ -1,8 +1,11 @@
 package org.shop.classes;
 
+import org.shop.interfaces.Convertible;
 import org.shop.interfaces.DbcAdapter;
 import java.lang.String;
 public class DbcAdapterRecordString implements DbcAdapter<String> {
+
+    DatabaseConnector db = DatabaseConnector.getInstance();
 
     /**
      * Database returns String, but we want String[]
@@ -19,6 +22,11 @@ public class DbcAdapterRecordString implements DbcAdapter<String> {
     @Override
     public String adaptDataToDBFormat(String string) {
         return string;
+    }
+
+    @Override
+    public void updateInBase(Convertible convertible) {
+        db.updateRecord(convertible);
     }
 
 }
